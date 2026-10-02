@@ -41,7 +41,7 @@
   function renderOpeningNote() {
     return `<section class="opening-note" aria-label="影像手记简介">
       <h2>有些日子，<br>会因为一束<em>光</em><br>记得更久。</h2>
-      <p>在名古屋遇见早开的樱花，去犬山看城与河；沿着釜山的海岸坐小火车，在阳朔顺水而行，在布罗莫等一场日出。海风吹过济州、甲米和科莫多，脚步也落进河内与大阪的街巷。后来抬头看富士山，在大连沿海走一段路，才发现记住一场旅行的，常常是那些不经意的片刻。</p>
+      <p>在名古屋遇见早开的樱花，去犬山看城与河；沿着釜山的海岸坐小火车，又在首尔的宫门前遇见春天。在阳朔顺水而行，在布罗莫等一场日出。海风吹过济州、甲米和科莫多，脚步也落进河内与大阪的街巷。后来抬头看富士山，在大连沿海走一段路，才发现记住一场旅行的，常常是那些不经意的片刻。</p>
     </section>`;
   }
 
@@ -86,9 +86,9 @@
     </section>`;
   }
 
-  function renderPhoto(id) {
+  function renderPhoto(id, featured = false) {
     const photo = photoOf(id);
-    return `<figure class="photo-item">
+    return `<figure class="photo-item${featured ? ' is-featured' : ''}">
       <button type="button" class="photo-button" data-photo-id="${escapeHtml(id)}" aria-label="查看高清照片：${escapeHtml(photo.caption)}">
         <img src="${escapeHtml(photo.src)}" alt="${escapeHtml(photo.caption)}" width="${photo.width}" height="${photo.height}" loading="lazy" decoding="async">
       </button>
@@ -106,7 +106,7 @@
     </nav>`;
     return `<article class="scene" id="${scene.id}">
       <div class="scene-copy"><span class="scene-date">${escapeHtml(scene.date)}</span><h4>${escapeHtml(scene.title)}</h4><p>${escapeHtml(scene.body)}</p><span class="scene-place">${escapeHtml(scene.place)}</span>${steps}</div>
-      <div class="scene-gallery" data-count="${scene.photoIds.length}">${scene.photoIds.map(renderPhoto).join('')}</div>
+      <div class="scene-gallery" data-count="${scene.photoIds.length}"${scene.layout ? ` data-layout="${escapeHtml(scene.layout)}"` : ''}>${scene.photoIds.map(id => renderPhoto(id, id === scene.featuredPhotoId)).join('')}</div>
     </article>`;
   }
 

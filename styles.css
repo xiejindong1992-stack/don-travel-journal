@@ -126,6 +126,9 @@ img { display: block; max-width: 100%; }
 .scene-gallery[data-count="4"] { grid-template-columns: repeat(2, minmax(0,1fr)); }
 .scene-gallery[data-count="5"], .scene-gallery[data-count="6"], .scene-gallery[data-count="7"] { grid-template-columns: repeat(2, minmax(0,1fr)); }
 .scene-gallery[data-count="5"] .photo-item:first-child, .scene-gallery[data-count="7"] .photo-item:first-child { grid-column: 1 / -1; }
+.scene-gallery[data-layout="balanced"] .photo-item:first-child { grid-column: auto; }
+.scene-gallery[data-layout="feature-grid"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.scene-gallery[data-layout="feature-grid"] .photo-item.is-featured { grid-column: 1 / -1; grid-row: 1; }
 .photo-item { margin: 0; min-width: 0; }
 .photo-button { display: block; width: 100%; border: 0; padding: 0; background: var(--paper-deep); cursor: zoom-in; overflow: hidden; }
 .photo-button img { width: 100%; height: auto; transition: transform .5s ease, opacity .3s ease; }
@@ -218,6 +221,7 @@ img { display: block; max-width: 100%; }
   .scene-copy p { max-width: 52ch; }
   .scene-place { margin-top: 16px; }
   .scene-gallery[data-count="2"], .scene-gallery[data-count="3"], .scene-gallery[data-count="4"] { gap: 22px 12px; }
+  .scene-gallery[data-layout="feature-grid"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .photo-caption { display: block; margin-top: 7px; }
   .photo-caption .caption-date { display: block; margin-top: 3px; }
   .chapter-footer { padding: 34px 22px 85px; }
@@ -238,6 +242,8 @@ img { display: block; max-width: 100%; }
   .cover h1 { font-size: 18vw; }
   .scene-gallery[data-count="2"], .scene-gallery[data-count="3"], .scene-gallery[data-count="4"] { grid-template-columns: 1fr; }
   .scene-gallery[data-count="3"] .photo-item:first-child { grid-column: auto; }
+  .scene-gallery[data-layout="feature-grid"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .scene-gallery[data-layout="feature-grid"] .photo-item:last-child { grid-column: 2; }
   .photo-caption { display: flex; }
   .photo-caption .caption-date { display: inline; margin-top: 0; }
   .contact-head span { font-size: .66rem; }
