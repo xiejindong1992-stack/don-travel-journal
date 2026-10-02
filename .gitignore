@@ -1,0 +1,10 @@
+*
+!/.gitignore
+!/.nojekyll
+!/index.html
+!/styles.css
+!/app.js
+!/trip-data.js
+!/flight-data.js
+!/media/
+!/media/*.webp

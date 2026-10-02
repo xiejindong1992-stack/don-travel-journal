@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f3f3ef">
+  <meta name="description" content="DON 的旅行影像手记。沿着山路、海岸与城市街巷，记录每次出发。">
+  <title>DON · 沿途 | 旅行影像手记</title>
+  <link rel="preload" as="image" href="media/japan-00-3000.webp">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="trip-data.js"></script>
+  <script defer src="flight-data.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="reading-progress" aria-hidden="true"></div>
+  <header class="site-header" id="site-header">
+    <a class="brand" href="#cover" aria-label="DON 的旅行影像手记，返回封面">DON<span class="brand-comma"> · </span>沿途</a>
+    <nav class="desktop-nav" aria-label="主导航">
+      <a href="#map" data-nav="map">地图</a>
+      <a href="#year-2025" data-nav="year-2025">2025</a>
+      <a href="#year-2026" data-nav="year-2026">2026</a>
+      <a href="#index" data-nav="index">影像索引</a>
+      <a href="#flights" data-nav="flights">飞行档案</a>
+      <details class="journey-menu"><summary>全部旅程 <span aria-hidden="true">⌄</span></summary><div class="journey-menu-panel" id="journey-menu-panel"></div></details>
+    </nav>
+    <details class="mobile-nav">
+      <summary aria-label="打开目录"><span></span><span></span></summary>
+      <nav aria-label="移动端目录">
+        <a href="#map">地图</a>
+        <a href="#year-2025">2025 年旅程</a>
+        <a href="#year-2026">2026 年旅程</a>
+        <a href="#index">影像索引</a>
+        <a href="#flights">飞行档案</a>
+        <div id="mobile-journey-menu"></div>
+      </nav>
+    </details>
+  </header>
+
+  <main id="app">
+    <div class="loading-shell" aria-live="polite">正在打开影像手记…</div>
+  </main>
+
+  <dialog class="lightbox" id="lightbox" aria-label="照片高清查看">
+    <div class="lightbox-shell">
+      <button type="button" class="lightbox-close" id="lightbox-close" aria-label="关闭照片">关闭 <span aria-hidden="true">×</span></button>
+      <button type="button" class="lightbox-arrow lightbox-arrow-prev" id="lightbox-prev" aria-label="上一张照片">‹</button>
+      <figure class="lightbox-figure">
+        <img id="lightbox-image" alt="">
+        <figcaption id="lightbox-caption"></figcaption>
+      </figure>
+      <button type="button" class="lightbox-arrow lightbox-arrow-next" id="lightbox-next" aria-label="下一张照片">›</button>
+      <div class="lightbox-count" id="lightbox-count" aria-live="polite"></div>
+    </div>
+  </dialog>
+</body>
+</html>
