@@ -294,7 +294,10 @@ img { display: block; max-width: 100%; }
 .flight-head { max-width: 900px; }
 .flight-head h2 { font-family: var(--serif); font-size: clamp(3.7rem, 7.5vw, 7.9rem); font-weight: 400; line-height: 1.08; letter-spacing: -.065em; margin: 22px 0 26px; }
 .flight-head p { color: var(--muted); line-height: 1.8; max-width: 55ch; }
-.flight-summary { display: flex; flex-wrap: wrap; gap: 45px clamp(55px, 9vw, 155px); margin: 75px 0 52px; padding: 30px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.flight-feature { margin: 64px 0 0; }
+.flight-feature img { display: block; width: 100%; aspect-ratio: 2.2 / 1; object-fit: cover; object-position: center 40%; }
+.flight-feature figcaption { display: flex; justify-content: space-between; gap: 20px; padding-top: 13px; color: var(--muted); font-size: .68rem; letter-spacing: .08em; }
+.flight-summary { display: flex; flex-wrap: wrap; gap: 45px clamp(55px, 9vw, 155px); margin: 55px 0 52px; padding: 30px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .flight-summary div { display: flex; flex-direction: column; gap: 5px; }
 .flight-summary strong { font-family: var(--serif); font-size: clamp(2.7rem, 5vw, 5rem); font-weight: 400; line-height: 1; letter-spacing: -.06em; }
 .flight-summary span { color: var(--muted); font-size: .72rem; letter-spacing: .07em; }
@@ -357,6 +360,9 @@ img { display: block; max-width: 100%; }
   .scene-gallery[data-count="5"], .scene-gallery[data-count="6"], .scene-gallery[data-count="7"] { gap: 22px 12px; }
   .flight-archive { padding: 100px 20px 90px; }
   .flight-head h2 { font-size: clamp(2.7rem, 9vw, 4.7rem); }
+  .flight-feature { margin-top: 38px; }
+  .flight-feature img { aspect-ratio: 4 / 3; object-position: center; }
+  .flight-feature figcaption { font-size: .6rem; }
   .flight-summary { gap: 35px 45px; }
   .flight-row { grid-template-columns: 1fr auto; gap: 13px; }
   .flight-date { grid-column: 1; grid-row: 1; flex-direction: row; gap: 9px; align-items: baseline; }

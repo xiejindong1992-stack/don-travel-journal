@@ -41,7 +41,7 @@
   function renderOpeningNote() {
     return `<section class="opening-note" aria-label="影像手记简介">
       <h2>有些日子，<br>会因为一束<em>光</em><br>记得更久。</h2>
-      <p>在阳朔顺水而行，在布罗莫等一场日出；海风吹过济州、甲米和科莫多，脚步也落进河内与大阪的街巷。后来抬头看富士山，在大连沿海走一段路，才发现记住一场旅行的，常常是那些不经意的片刻。</p>
+      <p>在名古屋遇见早开的樱花，去犬山看城与河；在阳朔顺水而行，在布罗莫等一场日出。海风吹过济州、甲米和科莫多，脚步也落进河内与大阪的街巷。后来抬头看富士山，在大连沿海走一段路，才发现记住一场旅行的，常常是那些不经意的片刻。</p>
     </section>`;
   }
 
@@ -170,6 +170,7 @@
     }).join('');
     return `<section class="flight-archive" id="flights" aria-labelledby="flights-title"><div class="flight-inner">
       <div class="flight-head"><span class="section-kicker">Flight archive</span><h2 id="flights-title">飞行，也是一种<br>沿途。</h2><p>每一次起飞，都把两座城市连在一起。点开一段航程，还能回到那次旅行的影像。</p></div>
+      <figure class="flight-feature"><img src="media/flight-hero.webp" alt="从飞机舷窗望见清晨天空下的机翼剪影" loading="lazy" decoding="async"><figcaption><span>Above the clouds</span><span>飞往大阪的清晨</span></figcaption></figure>
       <div class="flight-summary"><div><strong>${records.length}</strong><span>航班记录</span></div></div>
       <div class="flight-filter"><label for="flight-search">查找航班</label><input id="flight-search" type="search" placeholder="城市、机场、航司或航班号" autocomplete="off"><span id="flight-results">共 ${records.length} 条</span></div>
       <div class="flight-years">${years}</div><p class="flight-empty" id="flight-empty" hidden>没有找到匹配的航班。</p>
