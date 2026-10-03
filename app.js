@@ -41,7 +41,7 @@
   function renderOpeningNote() {
     return `<section class="opening-note" aria-label="影像手记简介">
       <h2>有些日子，<br>会因为一束<em>光</em><br>记得更久。</h2>
-      <p>在名古屋遇见早开的樱花，去犬山看城与河；沿着釜山的海岸坐小火车，又在首尔的宫门前遇见春天。在阳朔顺水而行，在布罗莫等一场日出。海风吹过济州、甲米和科莫多，脚步也落进河内与大阪的街巷。后来抬头看富士山，在大连沿海走一段路，才发现记住一场旅行的，常常是那些不经意的片刻。</p>
+      <p>在香港等一座城堡亮灯，听电车驶过街口；在名古屋遇见早开的樱花，去犬山看城与河。沿着釜山的海岸坐小火车，又在首尔的宫门前遇见春天。在阳朔顺水而行，在布罗莫等一场日出。海风吹过济州、甲米和科莫多，脚步也落进河内与大阪的街巷。后来抬头看富士山，在大连沿海走一段路，才发现记住一场旅行的，常常是那些不经意的片刻。</p>
     </section>`;
   }
 
@@ -78,7 +78,7 @@
               ${grid}${mapPaths}${routes}${markers}
             </svg>
             <nav class="map-city-list" aria-label="按城市查看照片">${cityLinks}</nav>
-            <div class="map-note"><span>蓝绿：2025 · 赭红：2026</span><span>底图轮廓：Natural Earth</span></div>
+            <div class="map-note"><span>灰蓝：2024 · 蓝绿：2025 · 赭红：2026</span><span>底图轮廓：Natural Earth</span></div>
           </div>
           <div class="atlas-journey-list">${list}</div>
         </div>

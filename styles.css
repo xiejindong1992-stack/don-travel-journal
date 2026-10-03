@@ -66,12 +66,15 @@ img { display: block; max-width: 100%; }
 .map-grid { fill: none; stroke: var(--line); stroke-width: .7; opacity: .6; }
 .map-land { fill: var(--map-land); stroke: var(--map-stroke); stroke-width: 1.15; vector-effect: non-scaling-stroke; }
 .map-route { fill: none; stroke-width: 2; stroke-dasharray: 4 7; vector-effect: non-scaling-stroke; opacity: .82; }
+.map-route-2024 { stroke: #6c7f91; }
 .map-route-2025 { stroke: #427b79; }
 .map-route-2026 { stroke: var(--accent); }
 .map-marker { cursor: pointer; text-decoration: none; }
 .map-marker-hit { fill: transparent; }
 .map-marker-halo { fill: var(--paper); stroke: #427b79; stroke-width: 1.5; vector-effect: non-scaling-stroke; }
 .map-marker-core { fill: #427b79; }
+.map-marker-2024 .map-marker-halo { stroke: #6c7f91; }
+.map-marker-2024 .map-marker-core { fill: #6c7f91; }
 .map-marker-2026 .map-marker-halo { stroke: var(--accent); }
 .map-marker-2026 .map-marker-core { fill: var(--accent); }
 .map-marker:hover .map-marker-halo, .map-marker:focus-visible .map-marker-halo, .map-marker.is-active .map-marker-halo { stroke-width: 3; }
