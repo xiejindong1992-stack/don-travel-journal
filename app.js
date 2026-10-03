@@ -41,8 +41,48 @@
   function renderOpeningNote() {
     return `<section class="opening-note" aria-label="影像手记简介">
       <h2>有些日子，<br>会因为一束<em>光</em><br>记得更久。</h2>
-      <p>在清迈看鸽群飞起，等山边日落；在香港等城堡亮灯，听电车驶过街口。去名古屋遇见早开的樱花，去犬山看城与河；沿着釜山的海岸坐小火车，又在首尔的宫门前遇见春天。在阳朔顺水而行，在布罗莫等一场日出。海风吹过济州、甲米和科莫多，脚步也落进河内与大阪的街巷。后来抬头看富士山，在大连沿海走一段路，才发现记住一场旅行的，常常是那些不经意的片刻。</p>
+      <p>沿着东京湾走过川崎与横滨，在镰仓把脚步交给海风；到清迈看鸽群飞起，等山边日落。香港的城堡亮起灯，名古屋的樱花开了，犬山的城与河也留在镜头里。沿釜山海岸坐小火车，在首尔宫门前遇见春天；在阳朔顺水而行，在布罗莫等一场日出。海风吹过济州、甲米和科莫多，脚步也落进河内与大阪的街巷。后来抬头看富士山，在大连沿海走一段路，才发现记住一场旅行的，常常是那些不经意的片刻。</p>
     </section>`;
+  }
+
+  // Give nearby places distinct targets while leaving routes at their real coordinates.
+  function layoutMapMarkers(markers) {
+    const laidOut = markers.map(marker => ({ ...marker, displayX: marker.x, displayY: marker.y }));
+    const spacing = 38;
+    for (let pass = 0; pass < 100; pass++) {
+      if (pass < 70) {
+        for (const marker of laidOut) {
+          marker.displayX += (marker.x - marker.displayX) * .045;
+          marker.displayY += (marker.y - marker.displayY) * .045;
+        }
+      }
+      for (let i = 0; i < laidOut.length; i++) {
+        for (let j = i + 1; j < laidOut.length; j++) {
+          const first = laidOut[i];
+          const second = laidOut[j];
+          let dx = second.displayX - first.displayX;
+          let dy = second.displayY - first.displayY;
+          let distance = Math.hypot(dx, dy);
+          if (distance >= spacing) continue;
+          if (distance < .001) {
+            const angle = (i * 7 + j * 11) * 2.39996;
+            dx = Math.cos(angle);
+            dy = Math.sin(angle);
+            distance = 1;
+          }
+          const shift = (spacing - distance) / (distance * 2);
+          first.displayX -= dx * shift;
+          first.displayY -= dy * shift;
+          second.displayX += dx * shift;
+          second.displayY += dy * shift;
+        }
+      }
+      for (const marker of laidOut) {
+        marker.displayX = Math.max(19, Math.min(981, marker.displayX));
+        marker.displayY = Math.max(19, Math.min(541, marker.displayY));
+      }
+    }
+    return laidOut;
   }
 
   function renderMap() {
@@ -54,11 +94,14 @@
     const grid = [180, 360, 540, 720, 900].map(x => `<path class="map-grid" d="M${x} 0V560"/>`).join('')
       + [112, 224, 336, 448].map(y => `<path class="map-grid" d="M0 ${y}H1000"/>`).join('');
     const mapPaths = Object.entries(trip.map.paths).map(([code, path]) => `<path class="map-land map-land-${code.toLowerCase()}" d="${path}"/>`).join('');
-    const markers = trip.map.markers.map(marker => {
+    const markers = layoutMapMarkers(trip.map.markers).map(marker => {
+      const moved = Math.hypot(marker.displayX - marker.x, marker.displayY - marker.y) > 2;
       return `<a class="map-marker map-marker-${marker.year}" data-map-city="${escapeHtml(marker.id)}" href="#${escapeHtml(marker.anchor)}" aria-label="跳转到${escapeHtml(marker.name)}照片">
-        <circle class="map-marker-hit" cx="${marker.x}" cy="${marker.y}" r="24"/>
-        <circle class="map-marker-halo" cx="${marker.x}" cy="${marker.y}" r="10"/>
-        <circle class="map-marker-core" cx="${marker.x}" cy="${marker.y}" r="3"/>
+        <title>${escapeHtml(marker.name)}</title>
+        ${moved ? `<line class="map-marker-leader" x1="${marker.x}" y1="${marker.y}" x2="${marker.displayX.toFixed(1)}" y2="${marker.displayY.toFixed(1)}"/><circle class="map-marker-origin" cx="${marker.x}" cy="${marker.y}" r="2"/>` : ''}
+        <circle class="map-marker-hit" cx="${marker.displayX.toFixed(1)}" cy="${marker.displayY.toFixed(1)}" r="18"/>
+        <circle class="map-marker-halo" cx="${marker.displayX.toFixed(1)}" cy="${marker.displayY.toFixed(1)}" r="10"/>
+        <circle class="map-marker-core" cx="${marker.displayX.toFixed(1)}" cy="${marker.displayY.toFixed(1)}" r="3"/>
       </a>`;
     }).join('');
     const cityLinks = trip.years.map(year => `<div class="map-city-year"><span>${year}</span>${trip.map.markers.filter(marker => marker.year === year).map(marker => `<a href="#${escapeHtml(marker.anchor)}" data-map-city="${escapeHtml(marker.id)}">${escapeHtml(marker.name)}</a>`).join('')}</div>`).join('');
@@ -70,10 +113,10 @@
       </a></li>`).join('')}</ol></div>`).join('');
     return `<section class="atlas" id="map" aria-labelledby="map-title">
       <div class="atlas-inner">
-        <div class="atlas-head"><span class="section-kicker">Journey map</span><h2 id="map-title">把走过的路，<br>连成一张地图。</h2><p>每个地点都落在真实的经纬度上。点击标记或城市名，回到那一段旅程的影像。</p></div>
+        <div class="atlas-head"><span class="section-kicker">Journey map</span><h2 id="map-title">把走过的路，<br>连成一张地图。</h2><p>路线按真实的城市位置绘制。相近的标记略微错开，细线指向实际位置。点击标记或城市名，回到那一段旅程的影像。</p></div>
         <div class="atlas-body">
           <div class="atlas-map">
-            <svg viewBox="${trip.map.viewBox}" role="img" aria-label="旅行影像中的城市位置地图">
+            <svg viewBox="${trip.map.viewBox}" role="group" aria-label="旅行影像中的城市位置地图">
               <rect x="0" y="0" width="1000" height="560" fill="var(--paper-deep)"/>
               ${grid}${mapPaths}${routes}${markers}
             </svg>

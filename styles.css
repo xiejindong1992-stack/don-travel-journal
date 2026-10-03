@@ -70,6 +70,8 @@ img { display: block; max-width: 100%; }
 .map-route-2025 { stroke: #427b79; }
 .map-route-2026 { stroke: var(--accent); }
 .map-marker { cursor: pointer; text-decoration: none; }
+.map-marker-leader { stroke: var(--muted); stroke-width: 1; vector-effect: non-scaling-stroke; opacity: .7; pointer-events: none; }
+.map-marker-origin { fill: var(--muted); pointer-events: none; }
 .map-marker-hit { fill: transparent; }
 .map-marker-halo { fill: var(--paper); stroke: #427b79; stroke-width: 1.5; vector-effect: non-scaling-stroke; }
 .map-marker-core { fill: #427b79; }
@@ -209,6 +211,8 @@ img { display: block; max-width: 100%; }
   .atlas-list li:nth-last-child(2) { border-bottom: 0; }
   .chapter-opening { height: 68svh; min-height: 430px; }
   .chapter-opening-title { top: 95px; left: 25px; }
+  .chapter[data-chapter="tokyo-kawasaki-2024"] .chapter-opening::after { background: linear-gradient(180deg, rgba(9,25,28,.12) 20%, transparent 38%, rgba(9,25,28,.7) 100%); }
+  .chapter[data-chapter="tokyo-kawasaki-2024"] .chapter-opening-title { top: auto; bottom: 58px; }
   .chapter-opening-title h2 { font-size: clamp(4.4rem, 18vw, 7.5rem); }
   .chapter[data-chapter="china"] .chapter-opening-title { right: 25px; }
   .chapter-intro { grid-template-columns: 1fr; padding: 74px 24px 84px; gap: 22px; }
