@@ -102,7 +102,6 @@ img { display: block; max-width: 100%; }
 .chapter { border-top: 1px solid var(--line); }
 .chapter-opening { position: relative; height: min(75vw, 770px); min-height: 520px; overflow: hidden; isolation: isolate; }
 .chapter-opening img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 50%; z-index: -1; }
-#hong-kong-disney-2024 .chapter-opening img { object-position: center 65%; }
 #vientiane-2024 .chapter-opening img { object-position: center 18%; }
 .chapter-opening::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(9,25,28,.55), transparent 58%, rgba(0,0,0,.08)); z-index: -1; }
 .chapter-opening-title { position: absolute; top: clamp(95px, 11vw, 166px); left: clamp(28px, 7vw, 110px); right: 28px; color: #fff; text-shadow: 0 2px 24px rgba(0,0,0,.38); }
@@ -347,6 +346,96 @@ img { display: block; max-width: 100%; }
 .flight-last a { color: var(--muted); font-size: .7rem; text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 3px; }
 .flight-last a:hover { color: var(--accent); }
 .flight-empty { text-align: center; padding: 35px; color: var(--muted); }
+.flight-stats { margin-top: clamp(90px, 10vw, 150px); padding-top: clamp(44px, 6vw, 90px); border-top: 1px solid var(--ink); }
+.flight-stats-head { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(270px, .5fr); align-items: end; gap: 30px; }
+.flight-stats-head h3 { margin: 20px 0 0; font-family: var(--serif); font-size: clamp(2.8rem, 5.4vw, 5.8rem); font-weight: 400; line-height: 1.17; letter-spacing: -.06em; }
+.flight-stats-head p { max-width: 30ch; margin: 0 0 5px; color: var(--muted); font-size: .84rem; line-height: 1.9; }
+.flight-atlas { margin-top: clamp(42px, 6vw, 84px); background: #1b2829; color: #f1f2ed; }
+.flight-atlas-header { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: end; gap: 34px; padding: clamp(26px, 4vw, 58px) clamp(24px, 4vw, 58px) 25px; }
+.flight-atlas-eyebrow { color: #cba799; font-size: .67rem; font-weight: 700; letter-spacing: .17em; text-transform: uppercase; }
+.flight-atlas-header h4 { margin: 18px 0 0; font-family: var(--serif); font-size: clamp(2.4rem, 4.6vw, 5rem); font-weight: 400; line-height: 1.13; letter-spacing: -.06em; }
+.flight-atlas-distance { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; padding-bottom: 6px; white-space: nowrap; }
+.flight-atlas-distance strong { font-family: var(--serif); font-size: clamp(2.2rem, 4.7vw, 5.3rem); font-weight: 400; line-height: 1; letter-spacing: -.06em; }
+.flight-atlas-distance strong small { font-family: var(--sans); font-size: .24em; font-weight: 400; letter-spacing: 0; }
+.flight-atlas-distance > span, .flight-atlas-distance > small { color: #acbab8; font-size: .68rem; letter-spacing: .03em; }
+.flight-atlas-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 13px 20px; padding: 0 clamp(24px, 4vw, 58px) 18px; }
+.flight-atlas-toolbar p { margin: 0; color: #afbfbc; font-size: .74rem; line-height: 1.6; }
+.flight-map-filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.flight-map-filters button { border: 1px solid #6b7e7b; padding: 8px 11px; background: transparent; color: #d3dcda; cursor: pointer; font-size: .68rem; }
+.flight-map-filters button:hover, .flight-map-filters button:focus-visible, .flight-map-filters button[aria-pressed="true"] { background: #d3b5a4; border-color: #d3b5a4; color: #1b2829; }
+.flight-map-mobile-hint { display: none; }
+.flight-atlas-scroll { overflow-x: auto; overflow-y: hidden; scrollbar-color: #768985 #213535; }
+.flight-atlas-scroll:focus-visible { outline: 2px solid #d3b5a4; outline-offset: -2px; }
+.flight-atlas-svg { display: block; width: 100%; min-width: 850px; height: auto; }
+.flight-map-sea { fill: #203334; }
+.flight-map-grid { fill: none; stroke: #9aaead; stroke-width: .55; opacity: .12; pointer-events: none; }
+.flight-map-land { fill: #354646; stroke: #79918e; stroke-width: .8; vector-effect: non-scaling-stroke; opacity: .88; pointer-events: none; }
+.flight-map-route { cursor: pointer; }
+.flight-map-route-stroke { fill: none; stroke: #c7aea0; stroke-width: var(--route-weight); vector-effect: non-scaling-stroke; opacity: .47; pointer-events: none; transition: opacity .18s ease, stroke .18s ease; }
+.flight-map-route.is-frequent .flight-map-route-stroke { opacity: .73; stroke: #e8c7b0; }
+.flight-map-route-hit { fill: none; stroke: transparent; stroke-width: 12; vector-effect: non-scaling-stroke; pointer-events: stroke; }
+.flight-map-route:hover .flight-map-route-stroke, .flight-map-route:focus-visible .flight-map-route-stroke, .flight-map-route.is-active .flight-map-route-stroke { opacity: 1; stroke: #fff0cc; stroke-width: 3.3; }
+.flight-map-route.is-dimmed .flight-map-route-stroke { opacity: .11; }
+.flight-map-route[hidden] { display: none; }
+.flight-map-airport { cursor: pointer; }
+.flight-map-leader { fill: none; stroke: #d1c7ae; stroke-width: .8; opacity: .5; pointer-events: none; }
+.flight-map-airport-hit { fill: transparent; }
+.flight-map-airport-ring { fill: #e8c7b0; stroke: #213535; stroke-width: 1; vector-effect: non-scaling-stroke; pointer-events: none; }
+.flight-map-airport-core { fill: #213535; pointer-events: none; }
+.flight-map-airport text { fill: #e0e8e4; font-family: var(--sans); font-size: 13px; font-weight: 700; letter-spacing: .08em; paint-order: stroke; stroke: #203334; stroke-width: 3px; cursor: pointer; }
+.flight-map-airport:hover .flight-map-airport-ring, .flight-map-airport:focus-visible .flight-map-airport-ring, .flight-map-airport.is-active .flight-map-airport-ring { fill: #fff0cc; stroke: #fff0cc; stroke-width: 2; }
+.flight-map-airport.is-active .flight-map-airport-core { fill: #1b2829; }
+.flight-map-airport.is-dimmed .flight-map-airport-ring, .flight-map-airport.is-dimmed text { opacity: .35; }
+.flight-atlas-bottom { display: flex; justify-content: space-between; align-items: center; gap: 20px; min-height: 94px; margin: 0 clamp(24px, 4vw, 58px); border-top: 1px solid #4c6360; }
+.flight-atlas-inspector { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 0; padding: 20px 0; line-height: 1.5; }
+.flight-atlas-inspector strong { font-family: var(--serif); font-size: clamp(1.2rem, 2vw, 1.7rem); font-weight: 400; }
+.flight-atlas-inspector span { align-self: center; color: #b3c1be; font-size: .74rem; }
+.flight-map-reset { flex: 0 0 auto; border: 0; border-bottom: 1px solid currentColor; padding: 4px 0; background: none; color: #d3b5a4; cursor: pointer; font-size: .7rem; }
+.flight-map-reset:hover, .flight-map-reset:focus-visible { color: #fff0cc; }
+.flight-atlas-note { margin: 0; padding: 0 clamp(24px, 4vw, 58px) 26px; color: #9aadaa; font-size: .67rem; line-height: 1.7; }
+.flight-atlas-note a { text-underline-offset: 3px; }
+.flight-stats-totals { display: grid; grid-template-columns: .7fr .7fr 1.6fr; margin: clamp(44px, 6vw, 90px) 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.flight-stats-totals > div { min-width: 0; padding: 27px 20px 30px 0; display: flex; flex-direction: column; justify-content: center; gap: 7px; }
+.flight-stats-totals > div + div { border-left: 1px solid var(--line); padding-left: clamp(20px, 4vw, 62px); }
+.flight-stats-totals > div > strong { font-family: var(--serif); font-size: clamp(3.3rem, 6vw, 6.5rem); font-weight: 400; letter-spacing: -.07em; line-height: 1; }
+.flight-stats-totals > div > span, .flight-stats-route > small { color: var(--muted); font-size: .73rem; letter-spacing: .05em; }
+.flight-stats-route > div { display: flex; flex-direction: column; gap: 7px; margin-top: 6px; }
+.flight-stats-route strong { font-family: var(--serif); font-size: clamp(2rem, 3.5vw, 3.7rem); font-weight: 400; letter-spacing: -.065em; line-height: 1.1; }
+.flight-stats-route strong span { color: var(--accent); }
+.flight-stats-route > div > span { color: var(--muted); font-size: .79rem; }
+.flight-stats-rankings, .flight-distance-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 2.5vw, 36px); }
+.flight-stat-panel { min-width: 0; padding: clamp(24px, 3.2vw, 46px); background: var(--paper-deep); }
+.flight-stat-panel-head > span, .flight-distance-head > span { color: var(--accent); font-size: .68rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.flight-stat-panel-head h4, .flight-distance-head h4 { margin: 20px 0 10px; font-family: var(--serif); font-weight: 400; font-size: clamp(2rem, 3vw, 3.2rem); line-height: 1.18; letter-spacing: -.055em; }
+.flight-stat-panel-head p { margin: 0 0 34px; color: var(--muted); font-size: .78rem; line-height: 1.7; }
+.flight-stat-list { list-style: none; margin: 0; padding: 0; }
+.flight-stat-list li { display: grid; grid-template-columns: 29px minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 17px 0; border-top: 1px solid var(--line); }
+.flight-stat-rank { color: var(--accent); font-family: var(--serif); font-size: .91rem; }
+.flight-stat-name { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.flight-stat-name strong { font-size: .92rem; font-weight: 500; overflow-wrap: anywhere; }
+.flight-stat-name small { color: var(--muted); font-size: .68rem; }
+.flight-stat-count { font-family: var(--serif); font-size: 1.7rem; letter-spacing: -.05em; white-space: nowrap; }
+.flight-stat-count small { margin-left: 3px; color: var(--muted); font-family: var(--sans); font-size: .63rem; letter-spacing: 0; }
+.flight-stat-more { border-top: 1px solid var(--ink); }
+.flight-stat-more summary { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 19px 0 2px; list-style: none; cursor: pointer; color: var(--accent); font-size: .74rem; }
+.flight-stat-more summary::-webkit-details-marker { display: none; }
+.flight-stat-more summary span { font-size: 1.3rem; transition: transform .2s ease; }
+.flight-stat-more[open] summary span { transform: rotate(45deg); }
+.flight-stat-more .flight-stat-list { margin-top: 18px; }
+.flight-distance-head { margin: clamp(65px, 8vw, 115px) 0 25px; }
+.flight-distance-head h4 { font-size: clamp(2.5rem, 4.6vw, 4.8rem); }
+.flight-distance-card { min-width: 0; padding: clamp(25px, 3vw, 46px); background: var(--paper-deep); }
+.flight-distance-card:first-child { background: var(--ink); color: var(--paper); }
+.flight-distance-card > span { font-size: .73rem; letter-spacing: .07em; }
+.flight-distance-card > p { margin: 20px 0 36px; font-size: .87rem; }
+.flight-distance-card > p strong { font-family: var(--serif); font-size: clamp(3.2rem, 5.8vw, 6rem); font-weight: 400; letter-spacing: -.075em; line-height: 1; }
+.flight-distance-card ol { list-style: none; padding: 0; margin: 0; }
+.flight-distance-card li { display: flex; flex-direction: column; gap: 6px; padding: 15px 0; border-top: 1px solid var(--line); }
+.flight-distance-card:first-child li { border-color: rgba(255,255,255,.25); }
+.flight-distance-card li > span { opacity: .68; font-size: .73rem; }
+.flight-distance-card li strong { font-weight: 500; font-size: .87rem; line-height: 1.5; }
+.flight-distance-card li strong small { opacity: .7; font-weight: 400; }
+.flight-stats-note { margin: 20px 0 0; color: var(--muted); font-size: .7rem; line-height: 1.8; }
 .flight-footer { display: flex; justify-content: space-between; gap: 20px; padding-top: 60px; }
 .flight-footer a { border-bottom: 1px solid currentColor; padding-bottom: 7px; text-decoration: none; font-size: .8rem; }
 [hidden] { display: none !important; }
@@ -387,6 +476,17 @@ img { display: block; max-width: 100%; }
   .flight-info { grid-column: 1 / -1; grid-row: 3; }
   .flight-filter { gap: 11px; }
   .flight-filter input { font-size: .78rem; }
+  .flight-stats-head { grid-template-columns: 1fr; gap: 20px; }
+  .flight-stats-head p { max-width: 50ch; }
+  .flight-atlas-header { grid-template-columns: 1fr; gap: 26px; }
+  .flight-atlas-distance { align-items: flex-start; }
+  .flight-map-mobile-hint { display: block; margin: 0; padding: 0 24px 11px; color: #b4c4c0; font-size: .68rem; letter-spacing: .08em; }
+  .flight-atlas-svg { width: 900px; min-width: 900px; }
+  .flight-atlas-bottom { align-items: flex-start; }
+  .flight-stats-totals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .flight-stats-route { grid-column: 1 / -1; border-top: 1px solid var(--line); }
+  .flight-stats-totals > .flight-stats-route { border-left: 0; padding-left: 0; }
+  .flight-stats-rankings, .flight-distance-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 430px) {
@@ -401,4 +501,14 @@ img { display: block; max-width: 100%; }
   .flight-summary { display: flex; }
   .flight-summary strong { font-size: 2.5rem; }
   .flight-summary span { font-size: .6rem; }
+  .flight-atlas-toolbar { align-items: flex-start; flex-direction: column; }
+  .flight-atlas-header h4 { font-size: 2.5rem; }
+  .flight-atlas-bottom { flex-direction: column; gap: 0; padding-bottom: 18px; }
+  .flight-atlas-inspector { flex-direction: column; gap: 4px; padding-bottom: 10px; }
+  .flight-stats-totals > div { padding-right: 10px; }
+  .flight-stats-totals > div + div { padding-left: 20px; }
+  .flight-stats-totals > .flight-stats-route { padding-left: 0; }
+  .flight-stat-panel, .flight-distance-card { padding: 24px 20px; }
+  .flight-stat-list li { gap: 8px; }
+  .flight-stat-name small { font-size: .62rem; }
 }
