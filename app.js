@@ -88,12 +88,43 @@
 
   function renderPhoto(id, featured = false) {
     const photo = photoOf(id);
-    return `<figure class="photo-item${featured ? ' is-featured' : ''}">
+    return `<figure class="photo-item${featured ? ' is-featured' : ''}" style="--photo-ratio: ${(photo.width / photo.height).toFixed(4)}">
       <button type="button" class="photo-button" data-photo-id="${escapeHtml(id)}" aria-label="查看高清照片：${escapeHtml(photo.caption)}">
         <img src="${escapeHtml(photo.src)}" alt="${escapeHtml(photo.caption)}" width="${photo.width}" height="${photo.height}" loading="lazy" decoding="async">
       </button>
       <figcaption class="photo-caption"><span class="caption-name">${escapeHtml(photo.caption)}</span><span class="caption-date">${dateLabel(photo.date)}</span></figcaption>
     </figure>`;
+  }
+
+  function photoRows(ids) {
+    const isPortrait = id => {
+      const photo = photoOf(id);
+      return photo.width / photo.height < .95;
+    };
+    const pairs = items => {
+      const rows = [];
+      for (let index = 0; index < items.length;) {
+        if (index + 6 <= items.length && items.slice(index, index + 6).every(isPortrait)) {
+          rows.push(items.slice(index, index + 3), items.slice(index + 3, index + 6));
+          index += 6;
+        } else {
+          rows.push(items.slice(index, index + 2));
+          index += 2;
+        }
+      }
+      return rows;
+    };
+    if (ids.length === 1) return [ids];
+    if (ids.length % 2 === 0) return pairs(ids);
+    const featuredIndex = ids.findIndex((id, index) => {
+      const photo = photoOf(id);
+      return index % 2 === 0 && photo.width / photo.height >= 1.1;
+    });
+    if (featuredIndex >= 0) {
+      return [...pairs(ids.slice(0, featuredIndex)), [ids[featuredIndex]],
+        ...pairs(ids.slice(featuredIndex + 1))];
+    }
+    return [ids.slice(0, 3), ...pairs(ids.slice(3))];
   }
 
   function renderScene(scene) {
@@ -104,9 +135,12 @@
       ${previous ? `<a href="#${escapeHtml(previous.id)}">← 上一站</a>` : `<a href="#map">← 返回地图</a>`}
       ${next ? `<a href="#${escapeHtml(next.id)}">下一站 →</a>` : `<a href="#index">影像索引 →</a>`}
     </nav>`;
+    const gallery = scene.layout === 'feature-grid'
+      ? scene.photoIds.map(id => renderPhoto(id, id === scene.featuredPhotoId)).join('')
+      : photoRows(scene.photoIds).map(row => `<div class="photo-row">${row.map(id => renderPhoto(id)).join('')}</div>`).join('');
     return `<article class="scene" id="${scene.id}">
       <div class="scene-copy"><span class="scene-date">${escapeHtml(scene.date)}</span><h4>${escapeHtml(scene.title)}</h4><p>${escapeHtml(scene.body)}</p><span class="scene-place">${escapeHtml(scene.place)}</span>${steps}</div>
-      <div class="scene-gallery" data-count="${scene.photoIds.length}"${scene.layout ? ` data-layout="${escapeHtml(scene.layout)}"` : ''}>${scene.photoIds.map(id => renderPhoto(id, id === scene.featuredPhotoId)).join('')}</div>
+      <div class="scene-gallery" data-count="${scene.photoIds.length}"${scene.layout ? ` data-layout="${escapeHtml(scene.layout)}"` : ''}>${gallery}</div>
     </article>`;
   }
 
