@@ -485,9 +485,10 @@
     return `<section class="flight-archive" id="flights" aria-labelledby="flights-title"><div class="flight-inner">
       <figure class="flight-feature"><img src="media/flight-hero.webp" alt="从飞机舷窗望见清晨天空下的机翼剪影" loading="lazy" decoding="async"><div class="flight-head"><span class="section-kicker">Flight archive</span><h2 id="flights-title">飞行，也是一种<br>沿途。</h2><p>每一次起飞，都把两座城市连在一起。点开一段航程，还能回到那次旅行的影像。</p></div><figcaption><span>Above the clouds</span><span>飞往大阪的清晨</span></figcaption></figure>
       <div class="flight-summary"><div><strong>${records.length}</strong><span>航班记录</span></div></div>
+      ${renderFlightStats(records)}
+      <div class="flight-records-heading" id="flight-records"><span class="section-kicker">Flight log / 逐年记录</span><h3>按年份，<br>翻阅每段航程。</h3></div>
       <div class="flight-filter"><label for="flight-search">查找航班</label><input id="flight-search" type="search" placeholder="城市、机场、航司或航班号" autocomplete="off"><span id="flight-results">共 ${records.length} 条</span></div>
       <div class="flight-years">${years}</div><p class="flight-empty" id="flight-empty" hidden>没有找到匹配的航班。</p>
-      ${renderFlightStats(records)}
       <nav class="flight-footer"><a href="#map">返回旅程地图 ↑</a><a href="#index">查看影像索引 ↗</a></nav>
     </div></section>`;
   }
