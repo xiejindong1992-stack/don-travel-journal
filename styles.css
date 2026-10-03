@@ -108,6 +108,8 @@ img { display: block; max-width: 100%; }
 .chapter-opening-title .chapter-no { font-size: .77rem; font-weight: 700; letter-spacing: .16em; }
 .chapter-opening-title h2 { font-family: var(--serif); font-size: clamp(4rem, 8vw, 8.6rem); font-weight: 400; line-height: .97; letter-spacing: -.072em; margin: 10px 0 0; max-width: 11ch; }
 .chapter-opening-title .country-zh { margin: 12px 0 0; font-size: clamp(.9rem, 1.4vw, 1.18rem); letter-spacing: .14em; }
+#hong-kong-2024 .chapter-opening-title { left: auto; right: clamp(28px, 7vw, 110px); text-align: right; }
+#hong-kong-2024 .chapter-opening-title h2 { margin-left: auto; }
 .chapter[data-chapter="china"] .chapter-opening-title { left: auto; right: clamp(28px, 7vw, 110px); text-align: right; }
 .chapter[data-chapter="china"] .chapter-opening-title h2 { margin-left: auto; }
 .chapter-intro { max-width: 1330px; margin: 0 auto; padding: clamp(76px, 9vw, 130px) clamp(24px, 5vw, 74px) clamp(68px, 8vw, 120px); display: grid; grid-template-columns: minmax(150px, .58fr) minmax(0, 2fr) minmax(240px, 1fr); gap: clamp(24px, 4vw, 70px); align-items: start; }
@@ -212,6 +214,8 @@ img { display: block; max-width: 100%; }
   .atlas-list li:nth-last-child(2) { border-bottom: 0; }
   .chapter-opening { height: 68svh; min-height: 430px; }
   .chapter-opening-title { top: 95px; left: 25px; }
+  #hong-kong-2024 .chapter-opening-title { top: 24px; left: 25px; right: 25px; text-align: left; }
+  #hong-kong-2024 .chapter-opening-title h2 { margin-left: 0; }
   .chapter[data-chapter="tokyo-kawasaki-2024"] .chapter-opening::after { background: linear-gradient(180deg, rgba(9,25,28,.12) 20%, transparent 38%, rgba(9,25,28,.7) 100%); }
   .chapter[data-chapter="tokyo-kawasaki-2024"] .chapter-opening-title { top: auto; bottom: 58px; }
   .chapter-opening-title h2 { font-size: clamp(4.4rem, 18vw, 7.5rem); }
