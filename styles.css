@@ -53,6 +53,12 @@ img { display: block; max-width: 100%; }
 .opening-note h2 { font-family: var(--serif); font-weight: 400; line-height: 1.24; letter-spacing: -.055em; font-size: clamp(2.8rem, 5.5vw, 5.6rem); margin: 0; }
 .opening-note h2 em { color: var(--accent); font-style: normal; }
 .opening-note p { margin: 0 0 .35rem; max-width: 38ch; color: var(--muted); line-height: 1.95; font-size: 1rem; }
+.opening-years { display: grid; gap: 23px; }
+.opening-year { display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 16px; align-items: baseline; }
+.opening-year h3 { margin: 0; color: var(--accent); font-family: var(--serif); font-size: 1.18rem; font-weight: 400; }
+.opening-note .opening-year p { margin: 0; font-size: .91rem; line-height: 1.85; }
+.opening-note .opening-afterword { margin: 3px 0 0; padding-top: 20px; border-top: 1px solid var(--line); font-size: .85rem; }
+
 
 .section-kicker { display: block; font-size: .69rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); }
 .atlas { padding: 110px clamp(24px, 6vw, 96px) 130px; border-top: 1px solid var(--line); }
@@ -290,6 +296,10 @@ img { display: block; max-width: 100%; }
 .atlas-list a { grid-template-columns: 25px minmax(0,1fr) auto; padding: 15px 0; }
 .atlas-list .route-date { font-size: .68rem; }
 .atlas-list .route-place { font-size: .7rem; }
+.atlas-list .route-name { display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px 9px; }
+.solo-trip-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 6px; border: 1px solid var(--line); border-radius: 2px; color: var(--accent); font-family: var(--sans); font-size: .52rem; font-weight: 500; line-height: 1.2; letter-spacing: .07em; white-space: nowrap; }
+.solo-trip-badge svg { width: 10px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; }
+
 
 .year-divider { padding: clamp(95px, 12vw, 160px) clamp(24px, 6vw, 96px); background: var(--paper-deep); border-top: 1px solid var(--line); }
 .year-divider-inner { max-width: 1330px; margin: 0 auto; display: grid; grid-template-columns: minmax(0,1.2fr) minmax(240px,.8fr); gap: 40px; align-items: end; }

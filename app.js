@@ -106,7 +106,12 @@
   function renderOpeningNote() {
     return `<section class="opening-note" aria-label="影像手记简介">
       <h2>有些日子，<br>会因为一束<em>光</em><br>记得更久。</h2>
-      <p>奈良的鹿在树影下回望，京都的鸟居在暮色里层层延伸，西安的夜色里有歌声；万象的路边是浓浓树荫，琅勃拉邦天还没亮，僧侣已经从街头走过。后来沿着东京湾去看海，在镰仓把脚步交给海风；到清迈看鸽群飞起，在名古屋等樱花开放，又在高山望见屋顶之外的雪线。沿釜山海岸坐小火车，在首尔宫门前遇见春天；去阳朔顺水而行，在曼谷的雨里赶向球场，到布罗莫等一场日出。旅途也走进香港、河内与大阪的街巷，海风吹过济州、甲米、科莫多和巴厘岛。抬头看富士山，在大连沿海走一段路；又从东京的灯火走进户隐杉林，看白马群山落进湖水。记住一场旅行的，常常是那些不经意的片刻。</p>
+      <div class="opening-years">
+        <div class="opening-year"><h3>2026</h3><p>海风从亚庇吹到甲米，富士山下抬头，大连海边慢走。秋天又从东京的灯火出发，走进户隐杉林，看白马群山落进湖水。</p></div>
+        <div class="opening-year"><h3>2025</h3><p>在名古屋等樱花，在高山望见雪线；沿釜山海岸慢行，在曼谷的雨里赶向球场。布罗莫的日出之后，是科莫多与巴厘岛的海。</p></div>
+        <div class="opening-year"><h3>2024</h3><p>奈良的鹿、京都暮色里的鸟居、西安夜里的歌声。琅勃拉邦的清晨与镰仓的海风，也留在了这一年的记忆里。</p></div>
+        <p class="opening-afterword">记住一场旅行的，常常是那些不经意的片刻。</p>
+      </div>
     </section>`;
   }
 
@@ -174,7 +179,7 @@
     const cityLinks = readingYears.map(year => `<div class="map-city-year"><span>${year}</span>${readingChapters.filter(chapter => chapter.year === year).flatMap(chapter => trip.map.markers.filter(marker => marker.country === chapter.id)).map(marker => `<a href="#${escapeHtml(marker.anchor)}" data-map-city="${escapeHtml(marker.id)}">${escapeHtml(marker.name)}</a>`).join('')}</div>`).join('');
     const list = readingYears.map(year => `<div class="atlas-year-group"><div class="atlas-year-label"><span>${year}</span><span>${readingChapters.filter(chapter => chapter.year === year).length} 段旅程</span></div><ol class="atlas-list">${readingChapters.filter(chapter => chapter.year === year).map(chapter => `<li>
       <a href="#${chapter.id}" data-map-country="${escapeHtml(chapter.id)}"><span class="route-number">${chapter.number}</span>
-        <span class="route-name">${escapeHtml(chapter.name)} <small>${escapeHtml(chapter.english)}</small></span>
+        <span class="route-name"><span>${escapeHtml(chapter.name)}</span><small>${escapeHtml(chapter.english)}</small>${chapter.soloTrip ? '<span class="solo-trip-badge" aria-label="独自旅行 · Solo trip"><svg viewBox="0 0 16 20" aria-hidden="true"><circle cx="8" cy="4" r="2.5"/><path d="M3 13v-2a5 5 0 0 1 10 0v2M6 12v6m4-6v6"/></svg>SOLO TRIP</span>' : ''}</span>
         <span class="route-date">${escapeHtml(chapter.period)}</span>
         <span class="route-place">${escapeHtml(chapter.country)} · ${escapeHtml(chapter.place)}</span>
       </a></li>`).join('')}</ol></div>`).join('');
