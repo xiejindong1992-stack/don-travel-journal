@@ -9,10 +9,17 @@
     return;
   }
 
+  // Newest journeys lead the page; each journey keeps its own travel sequence.
+  const chapterStart = chapter => chapter.dateStart || `${chapter.year}-${chapter.period.slice(0, 5).replace('.', '-')}`;
+  const readingChapters = [...trip.chapters].sort((first, second) =>
+    Number(second.year) - Number(first.year)
+    || chapterStart(second).localeCompare(chapterStart(first))
+    || Number(second.number) - Number(first.number));
+  const readingYears = [...new Set(readingChapters.map(chapter => chapter.year))];
   const photos = new Map(trip.photos.map(photo => [photo.id, photo]));
-  const chapterById = new Map(trip.chapters.map(chapter => [chapter.id, chapter]));
-  const lightboxOrder = trip.chapters.flatMap(chapter => chapter.photoIds);
-  const sceneSteps = trip.chapters.flatMap(chapter => chapter.scenes);
+  const chapterById = new Map(readingChapters.map(chapter => [chapter.id, chapter]));
+  const lightboxOrder = readingChapters.flatMap(chapter => chapter.photoIds);
+  const sceneSteps = readingChapters.flatMap(chapter => chapter.scenes);
   const sceneStepIndex = new Map(sceneSteps.map((scene, index) => [scene.id, index]));
   let currentLightboxIndex = 0;
 
@@ -144,8 +151,10 @@
   }
 
   function renderMap() {
+    const yearColors = ['#6c7f91', '#427b79', 'var(--accent)', '#8c7550', '#786b92', '#537a58'];
+    const yearColor = year => yearColors[((Number(year) - 2024) % yearColors.length + yearColors.length) % yearColors.length];
     const markerById = new Map(trip.map.markers.map(marker => [marker.id, marker]));
-    const routes = trip.map.routes.map(route => `<polyline class="map-route map-route-${route.year}" points="${route.ids.map(id => {
+    const routes = trip.map.routes.map(route => `<polyline class="map-route map-route-${route.year}" style="--year-color:${yearColor(route.year)}" points="${route.ids.map(id => {
       const marker = markerById.get(id);
       return `${marker.x},${marker.y}`;
     }).join(' ')}"/>`).join('');
@@ -154,7 +163,7 @@
     const mapPaths = Object.entries(trip.map.paths).map(([code, path]) => `<path class="map-land map-land-${code.toLowerCase()}" d="${path}"/>`).join('');
     const markers = layoutMapMarkers(trip.map.markers).map(marker => {
       const moved = Math.hypot(marker.displayX - marker.x, marker.displayY - marker.y) > 2;
-      return `<a class="map-marker map-marker-${marker.year}" data-map-city="${escapeHtml(marker.id)}" href="#${escapeHtml(marker.anchor)}" aria-label="跳转到${escapeHtml(marker.name)}照片">
+      return `<a class="map-marker map-marker-${marker.year}" style="--year-color:${yearColor(marker.year)}" data-map-city="${escapeHtml(marker.id)}" href="#${escapeHtml(marker.anchor)}" aria-label="跳转到${escapeHtml(marker.name)}照片">
         <title>${escapeHtml(marker.name)}</title>
         ${moved ? `<line class="map-marker-leader" x1="${marker.x}" y1="${marker.y}" x2="${marker.displayX.toFixed(1)}" y2="${marker.displayY.toFixed(1)}"/><circle class="map-marker-origin" cx="${marker.x}" cy="${marker.y}" r="2"/>` : ''}
         <circle class="map-marker-hit" cx="${marker.displayX.toFixed(1)}" cy="${marker.displayY.toFixed(1)}" r="18"/>
@@ -162,8 +171,8 @@
         <circle class="map-marker-core" cx="${marker.displayX.toFixed(1)}" cy="${marker.displayY.toFixed(1)}" r="3"/>
       </a>`;
     }).join('');
-    const cityLinks = trip.years.map(year => `<div class="map-city-year"><span>${year}</span>${trip.map.markers.filter(marker => marker.year === year).map(marker => `<a href="#${escapeHtml(marker.anchor)}" data-map-city="${escapeHtml(marker.id)}">${escapeHtml(marker.name)}</a>`).join('')}</div>`).join('');
-    const list = trip.years.map(year => `<div class="atlas-year-group"><div class="atlas-year-label"><span>${year}</span><span>${trip.chapters.filter(chapter => chapter.year === year).length} 段旅程</span></div><ol class="atlas-list">${trip.chapters.filter(chapter => chapter.year === year).map(chapter => `<li>
+    const cityLinks = readingYears.map(year => `<div class="map-city-year"><span>${year}</span>${readingChapters.filter(chapter => chapter.year === year).flatMap(chapter => trip.map.markers.filter(marker => marker.country === chapter.id)).map(marker => `<a href="#${escapeHtml(marker.anchor)}" data-map-city="${escapeHtml(marker.id)}">${escapeHtml(marker.name)}</a>`).join('')}</div>`).join('');
+    const list = readingYears.map(year => `<div class="atlas-year-group"><div class="atlas-year-label"><span>${year}</span><span>${readingChapters.filter(chapter => chapter.year === year).length} 段旅程</span></div><ol class="atlas-list">${readingChapters.filter(chapter => chapter.year === year).map(chapter => `<li>
       <a href="#${chapter.id}" data-map-country="${escapeHtml(chapter.id)}"><span class="route-number">${chapter.number}</span>
         <span class="route-name">${escapeHtml(chapter.name)} <small>${escapeHtml(chapter.english)}</small></span>
         <span class="route-date">${escapeHtml(chapter.period)}</span>
@@ -179,7 +188,7 @@
               ${grid}${mapPaths}${routes}${markers}
             </svg>
             <nav class="map-city-list" aria-label="按城市查看照片">${cityLinks}</nav>
-            <div class="map-note"><span>灰蓝：2024 · 蓝绿：2025 · 赭红：2026</span><span>底图轮廓：Natural Earth</span></div>
+            <div class="map-note"><span class="map-year-legend">${readingYears.map(year => `<span><i style="background:${yearColor(year)}" aria-hidden="true"></i>${year}</span>`).join('')}</span><span>底图轮廓：Natural Earth</span></div>
           </div>
           <div class="atlas-journey-list">${list}</div>
         </div>
@@ -246,7 +255,7 @@
   }
 
   function renderYearDivider(year) {
-    const chapters = trip.chapters.filter(chapter => chapter.year === year);
+    const chapters = readingChapters.filter(chapter => chapter.year === year);
     const photos = chapters.reduce((total, chapter) => total + chapter.photoCount, 0);
     return `<section class="year-divider" id="year-${year}" aria-label="${year} 年旅程">
       <div class="year-divider-inner"><span class="section-kicker">The travel chapters</span><h2>${year}<span>.</span></h2>
@@ -256,8 +265,8 @@
 
   function renderChapter(chapter, index) {
     const hero = photoOf(chapter.heroId);
-    const next = trip.chapters[index + 1];
-    const previous = trip.chapters[index - 1];
+    const next = readingChapters[index + 1];
+    const previous = readingChapters[index - 1];
     const nextLink = next ? `<a class="chapter-next" href="#${next.id}">下一程：${escapeHtml(next.name)} ↗</a>` : '<a class="chapter-next" href="#index">查看影像索引 ↗</a>';
     const previousLink = previous ? `<a href="#${previous.id}">← 上一程：${escapeHtml(previous.name)}</a>` : '<a href="#map">← 返回地图</a>';
     return `<section class="chapter" id="${chapter.id}" data-chapter="${chapter.id}" data-year="${chapter.year}" aria-labelledby="${chapter.id}-title">
@@ -272,7 +281,7 @@
   }
 
   function renderEnding() {
-    const groups = trip.years.map(year => `<div class="contact-year-label">${year} / ${trip.chapters.filter(chapter => chapter.year === year).length} journeys</div>` + trip.chapters.filter(chapter => chapter.year === year).map(chapter => {
+    const groups = readingYears.map(year => `<div class="contact-year-label">${year} / ${readingChapters.filter(chapter => chapter.year === year).length} journeys</div>` + readingChapters.filter(chapter => chapter.year === year).map(chapter => {
       const cells = chapter.photoIds.map((id, index) => {
         const photo = photoOf(id);
         return `<button type="button" class="contact-cell" data-number="${String(index + 1).padStart(2, '0')}" data-photo-id="${id}" aria-label="查看高清照片：${escapeHtml(photo.caption)}"><img src="${escapeHtml(photo.src)}" alt="" loading="lazy" decoding="async"></button>`;
@@ -497,13 +506,18 @@
     return `<footer class="site-footer"><span>DON · 沿途 · 旅行影像手记</span><span>照片来自个人旅途 · 地图轮廓：<a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener noreferrer">Natural Earth</a> · 航班来自个人记录</span></footer>`;
   }
 
-  const chaptersByYear = trip.years.map(year => renderYearDivider(year) + trip.chapters.filter(chapter => chapter.year === year).map(chapter => renderChapter(chapter, trip.chapters.indexOf(chapter))).join('')).join('');
+  const chaptersByYear = readingYears.map(year => renderYearDivider(year) + readingChapters.filter(chapter => chapter.year === year).map(chapter => renderChapter(chapter, readingChapters.indexOf(chapter))).join('')).join('');
   app.innerHTML = renderCover() + renderOpeningNote() + renderMap()
     + chaptersByYear + renderEnding() + renderFlights() + renderFooter();
 
-  const directory = trip.years.map(year => `<div class="directory-year"><span>${year}</span><div>${trip.chapters.filter(chapter => chapter.year === year).map(chapter => `<a href="#${chapter.id}" data-directory-chapter="${chapter.id}"><span>${chapter.number}</span><strong>${escapeHtml(chapter.name)}</strong><small>${escapeHtml(chapter.country)}</small></a>`).join('')}</div></div>`).join('');
+  const directory = readingYears.map(year => `<div class="directory-year"><span>${year}</span><div>${readingChapters.filter(chapter => chapter.year === year).map(chapter => `<a href="#${chapter.id}" data-directory-chapter="${chapter.id}"><span>${chapter.number}</span><strong>${escapeHtml(chapter.name)}</strong><small>${escapeHtml(chapter.country)}</small></a>`).join('')}</div></div>`).join('');
   document.getElementById('journey-menu-panel').innerHTML = directory;
   document.getElementById('mobile-journey-menu').innerHTML = directory;
+
+  document.querySelector('.desktop-nav > a[data-nav="index"]').insertAdjacentHTML('beforebegin',
+    readingYears.slice(0, 3).map(year => `<a href="#year-${year}" data-nav="year-${year}">${year}</a>`).join(''));
+  document.querySelector('.mobile-nav nav > a[href="#index"]').insertAdjacentHTML('beforebegin',
+    readingYears.map(year => `<a href="#year-${year}">${year} 年旅程</a>`).join(''));
 
   const flightSearch = document.getElementById('flight-search');
   flightSearch.addEventListener('input', () => {
@@ -673,7 +687,7 @@
   coverObserver.observe(document.getElementById('cover'));
 
   const navLinks = [...document.querySelectorAll('[data-nav]')];
-  const readingSections = ['cover', 'map', ...trip.years.flatMap(year => [`year-${year}`,...trip.chapters.filter(chapter => chapter.year === year).map(chapter => chapter.id)]), 'index', 'flights']
+  const readingSections = ['cover', 'map', ...readingYears.flatMap(year => [`year-${year}`,...readingChapters.filter(chapter => chapter.year === year).map(chapter => chapter.id)]), 'index', 'flights']
     .map(id => document.getElementById(id));
   const mapCountryLinks = [...document.querySelectorAll('[data-map-country]')];
   const mapCityLinks = [...document.querySelectorAll('[data-map-city]')];
