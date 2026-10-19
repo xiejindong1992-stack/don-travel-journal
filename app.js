@@ -109,7 +109,9 @@
       <div class="opening-years">
         <div class="opening-year"><h3>2026</h3><p>海风从亚庇吹到甲米，富士山下抬头，大连海边慢走。秋天又从东京的灯火出发，走进户隐杉林，看白马群山落进湖水。</p></div>
         <div class="opening-year"><h3>2025</h3><p>在名古屋等樱花，在高山望见雪线；沿釜山海岸慢行，在曼谷的雨里赶向球场。布罗莫的日出之后，是科莫多与巴厘岛的海。</p></div>
-        <div class="opening-year"><h3>2024</h3><p>奈良的鹿、京都暮色里的鸟居、西安夜里的歌声。琅勃拉邦的清晨与镰仓的海风，也留在了这一年的记忆里。</p></div>
+        <div class="opening-year"><h3>2024</h3><p>奈良的鹿、京都暮色里的鸟居、西安夜里的歌声。从琅勃拉邦的清晨，到郴州的草坡与江水，再到镰仓的海风，都留在这一年的记忆里。</p></div>
+        <div class="opening-year"><h3>2018</h3><p>甲米的雨落在夜里。天晴后乘长尾船靠近岩壁，沿退潮的海滩慢走，抬头看见树梢上的猴子。</p></div>
+        <div class="opening-year"><h3>2017</h3><p>在兰卡威的椰树下等日落，在木屋廊下看雨。入冬走上麦理浩径，翻过山，再沿海湾走到天黑。</p></div>
         <p class="opening-afterword">记住一场旅行的，常常是那些不经意的片刻。</p>
       </div>
     </section>`;
@@ -157,7 +159,8 @@
 
   function renderMap() {
     const yearColors = ['#6c7f91', '#427b79', 'var(--accent)', '#8c7550', '#786b92', '#537a58'];
-    const yearColor = year => yearColors[((Number(year) - 2024) % yearColors.length + yearColors.length) % yearColors.length];
+    const colorOrder = [2, 1, 0, 3, 4, 5];
+    const yearColor = year => yearColors[colorOrder[readingYears.findIndex(value => Number(value) === Number(year)) % colorOrder.length]];
     const markerById = new Map(trip.map.markers.map(marker => [marker.id, marker]));
     const routes = trip.map.routes.map(route => `<polyline class="map-route map-route-${route.year}" style="--year-color:${yearColor(route.year)}" points="${route.ids.map(id => {
       const marker = markerById.get(id);
