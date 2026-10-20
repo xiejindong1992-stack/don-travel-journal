@@ -723,3 +723,13 @@ img { display: block; max-width: 100%; }
 }
 
 @media (max-width: 760px) { .theme-cover-manholes .theme-image img { aspect-ratio: 1; } }
+
+/* Equal paired covers on desktop; a readable single column on phones. */
+@media (min-width: 761px) {
+  .collections-home .theme-cover-wide { grid-column: auto; }
+  .collections-home .theme-cover .theme-image img { aspect-ratio: 4/3; }
+  .collections-home .theme-cover .theme-copy { padding: clamp(25px,3vw,42px); }
+  .collections-home .theme-cover .theme-copy h2 { font-size: clamp(2.1rem,3.4vw,3.4rem); }
+  .collections-home .theme-cover .theme-open { right: clamp(25px,3vw,42px); bottom: clamp(25px,3vw,42px); }
+  .collections-home .theme-cover-wings .theme-image img { object-position: center; }
+}
