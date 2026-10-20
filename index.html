@@ -7,10 +7,11 @@
   <meta name="description" content="DON 的旅行影像手记。沿着山路、海岸与城市街巷，记录每次出发。">
   <title>DON · 沿途 | 旅行影像手记</title>
   <link rel="preload" as="image" href="media/japan-00-3000.webp">
-  <link rel="stylesheet" href="styles.css?v=20261020-1">
-  <script defer src="trip-data.js?v=20261020-1"></script>
-  <script defer src="flight-data.js?v=20261020-1"></script>
-  <script defer src="app.js?v=20261020-1"></script>
+  <link rel="stylesheet" href="styles.css?v=20261020-2">
+  <script defer src="trip-data.js?v=20261020-2"></script>
+  <script defer src="flight-data.js?v=20261020-2"></script>
+  <script defer src="collections-data.js?v=20261020-2"></script>
+  <script defer src="app.js?v=20261020-2"></script>
 </head>
 <body>
   <div class="reading-progress" aria-hidden="true"></div>
@@ -18,17 +19,19 @@
     <a class="brand" href="#cover" aria-label="DON 的旅行影像手记，返回封面">DON<span class="brand-comma"> · </span>沿途</a>
     <nav class="desktop-nav" aria-label="主导航">
       <a href="#map" data-nav="map">地图</a>
+      <details class="journey-menu"><summary data-nav="journeys">旅程 <span aria-hidden="true">⌄</span></summary><div class="journey-menu-panel" id="journey-menu-panel"></div></details>
+      <a href="#collections" data-nav="collections">沿途拾集</a>
       <a href="#index" data-nav="index">影像索引</a>
       <a href="#flights" data-nav="flights">飞行档案</a>
-      <details class="journey-menu"><summary>全部旅程 <span aria-hidden="true">⌄</span></summary><div class="journey-menu-panel" id="journey-menu-panel"></div></details>
     </nav>
     <details class="mobile-nav">
       <summary aria-label="打开目录"><span></span><span></span></summary>
       <nav aria-label="移动端目录">
         <a href="#map">地图</a>
+        <details class="mobile-journeys"><summary>旅程 · 按年份浏览</summary><div id="mobile-journey-menu"></div></details>
+        <a href="#collections">沿途拾集</a>
         <a href="#index">影像索引</a>
         <a href="#flights">飞行档案</a>
-        <div id="mobile-journey-menu"></div>
       </nav>
     </details>
   </header>

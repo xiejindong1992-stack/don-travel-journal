@@ -18,7 +18,10 @@
   const readingYears = [...new Set(readingChapters.map(chapter => chapter.year))];
   const photos = new Map(trip.photos.map(photo => [photo.id, photo]));
   const chapterById = new Map(readingChapters.map(chapter => [chapter.id, chapter]));
-  const lightboxOrder = readingChapters.flatMap(chapter => chapter.photoIds);
+  const journalLightboxOrder = readingChapters.flatMap(chapter => chapter.photoIds);
+  let lightboxOrder = journalLightboxOrder;
+  const themes = window.COLLECTIONS_DATA?.themes || [];
+  let collectionViewActive = false;
   const sceneSteps = readingChapters.flatMap(chapter => chapter.scenes);
   const sceneStepIndex = new Map(sceneSteps.map((scene, index) => [scene.id, index]));
   let currentLightboxIndex = 0;
@@ -514,18 +517,106 @@
     return `<footer class="site-footer"><span>DON · 沿途 · 旅行影像手记</span><span>照片来自个人旅途 · 地图轮廓：<a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener noreferrer">Natural Earth</a> · 航班来自个人记录</span></footer>`;
   }
 
-  const chaptersByYear = readingYears.map(year => renderYearDivider(year) + readingChapters.filter(chapter => chapter.year === year).map(chapter => renderChapter(chapter, readingChapters.indexOf(chapter))).join('')).join('');
-  app.innerHTML = renderCover() + renderOpeningNote() + renderMap()
-    + chaptersByYear + renderEnding() + renderFlights() + renderFooter();
+  function collectionImage(id, className = '', alt = '') {
+    const photo = photoOf(id);
+    return `<img class="${className}" src="${photo.src}" width="${photo.width}" height="${photo.height}" alt="${escapeHtml(alt || photo.caption)}" loading="lazy" decoding="async">`;
+  }
+  function renderCollectionDirectory() {
+    const ordered = [...themes].sort((a, b) => b.updated.localeCompare(a.updated));
+    return `<section class="collections-page" aria-labelledby="collections-title">
+      <header class="collections-heading"><p class="collections-en">Gathered along the way</p><h1 id="collections-title" tabindex="-1">沿途拾集</h1><p>有些记忆，不属于某一年或某座城。<br>把路上反复遇见、忍不住收藏的小事，慢慢放在一起。</p></header>
+      <div class="collection-tools"><div class="collection-filters" role="group" aria-label="筛选拾集主题">${['全部', ...new Set(themes.map(t => t.category))].map((category, index) => `<button type="button" data-theme-filter="${category}" aria-pressed="${index === 0}">${category}</button>`).join('')}</div><label class="collection-search">查找主题<input id="collection-search" type="search" placeholder="井盖、咖啡、中文…" autocomplete="off"></label></div>
+      <p class="collection-result-count" id="collection-result-count" role="status">${themes.length} 个主题，慢慢收集</p>
+      <div class="collection-directory">${ordered.map((theme, index) => `<article class="theme-card${index === 0 ? ' theme-card-featured' : ''}" data-theme-category="${theme.category}" data-theme-search="${escapeHtml([theme.title,theme.subtitle,theme.category,theme.description,...theme.items.map(i => i.city)].join(' ').toLowerCase())}"><a href="#collection/${theme.id}"><div class="theme-image">${collectionImage(theme.coverPhotoId)}</div><div class="theme-copy"><p class="theme-subtitle">${theme.subtitle}</p><h2>${theme.title}<span aria-hidden="true">↗</span></h2><p>${theme.description}</p><span class="theme-count">${theme.items.length} 则拾集 · 打开看看</span></div></a></article>`).join('')}</div>
+      <div class="collection-empty" id="collection-search-empty" hidden><h2>这一页还没有收进来</h2><p>换个词，或回到全部主题看看。</p><button type="button" data-reset-themes>查看全部主题</button></div>
+      <p class="collection-afterword">今天收藏一枚井盖，明天记下一杯咖啡。这个书架，留给以后路上的发现。</p>
+    </section>${renderFooter()}`;
+  }
+  function renderCollectionItem(item) {
+    const photo = photoOf(item.photoId);
+    const chapter = chapterById.get(photo.chapter);
+    const scene = chapter.scenes.find(s => s.photoIds.includes(item.photoId));
+    return `<article class="collected-item" data-item-type="${item.type}"><figure><button type="button" class="collected-photo" data-photo-id="${photo.id}" aria-label="查看高清照片：${escapeHtml(item.title)}">${collectionImage(photo.id, '', item.title)}</button><figcaption>${escapeHtml(item.city)}<span>${escapeHtml(photo.date.replaceAll('-', '.'))}</span></figcaption></figure><div class="collected-copy"><h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.note)}</p><a class="collection-source" href="#${scene?.id || chapter.id}">回到${escapeHtml(chapter.name)}的旅程 <span aria-hidden="true">↗</span></a></div></article>`;
+  }
+  function renderCollectionDetail(theme) {
+    return `<section class="collections-page collection-detail collection-detail-${theme.kind}" aria-labelledby="collection-title"><a class="collection-back" href="#collections">← 全部拾集</a><header class="collections-heading"><p class="collections-en">${escapeHtml(theme.english)}</p><h1 id="collection-title" tabindex="-1">${escapeHtml(theme.title)}</h1><p>${escapeHtml(theme.description)}</p><span class="collection-detail-subtitle">${theme.subtitle}</span></header>
+    ${theme.kind === 'coffee' ? `<div class="coffee-tabs" role="tablist" aria-label="咖啡记录类型"><button id="cafe-tab" role="tab" aria-selected="true" aria-controls="cafe-panel" tabindex="0" data-coffee-tab="cafe">坐下来的一杯 <span>${theme.items.filter(i=>i.type==='cafe').length}</span></button><button id="beans-tab" role="tab" aria-selected="false" aria-controls="beans-panel" tabindex="-1" data-coffee-tab="beans">带回家的一袋 <span>${theme.items.filter(i=>i.type==='beans').length}</span></button></div><div id="cafe-panel" role="tabpanel" aria-labelledby="cafe-tab" class="collected-items">${theme.items.filter(i=>i.type==='cafe').map((item,i)=>renderCollectionItem(item)).join('')}</div><div id="beans-panel" role="tabpanel" aria-labelledby="beans-tab" hidden>${theme.items.some(i=>i.type==='beans') ? theme.items.filter(i=>i.type==='beans').map((item,i)=>renderCollectionItem(item)).join('') : `<div class="beans-empty"><span class="beans-word">留一袋香气，给回家的日常。</span><p>咖啡豆的记录还没收进来。<br>下一袋，会记下在哪里买、来自哪里，以及喝起来的味道。</p></div>`}</div>` : `<div class="collected-items">${theme.items.map((item,i)=>renderCollectionItem(item)).join('')}</div>`}
+    <aside class="collection-related"><h2>继续翻翻</h2>${themes.filter(t=>t.id!==theme.id).map(t=>`<a href="#collection/${t.id}">${t.title}<span aria-hidden="true">→</span></a>`).join('')}</aside></section>${renderFooter()}`;
+  }
+  function isCollectionHash(hash) { return hash === '#collections' || hash.startsWith('#collection/'); }
+  function navigateView(hash, userClick) {
+    const wasCollection = collectionViewActive;
+    collectionViewActive = isCollectionHash(hash);
+    const journal = document.getElementById('journal-view');
+    const mount = document.getElementById('collections-view');
+    journal.hidden = collectionViewActive;
+    mount.hidden = !collectionViewActive;
+    document.body.classList.toggle('viewing-collections', collectionViewActive);
+    if (collectionViewActive) {
+      const theme = themes.find(t => '#collection/' + t.id === hash);
+      mount.innerHTML = theme ? renderCollectionDetail(theme) : renderCollectionDirectory();
+      lightboxOrder = theme ? theme.items.map(i=>i.photoId) : journalLightboxOrder;
+      document.title = `${theme?.title || '沿途拾集'} | DON · 沿途`;
+      window.scrollTo({top: 0, behavior: 'instant'});
+      if (userClick) mount.querySelector('h1').focus({preventScroll: true});
+    } else {
+      lightboxOrder = journalLightboxOrder;
+      document.title = 'DON · 沿途 | 旅行影像手记';
+      const target = document.getElementById(hash.slice(1)) || document.getElementById('cover');
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      target.scrollIntoView({behavior: !userClick || wasCollection || reduced || Math.abs(target.getBoundingClientRect().top) > innerHeight*2 ? 'instant' : 'smooth', block:'start'});
+    }
+    header.classList.toggle('is-scrolled', collectionViewActive || document.getElementById('cover').getBoundingClientRect().bottom <= 72);
+    document.querySelector('.mobile-nav').open = false;
+    document.querySelector('.journey-menu').open = false;
+    scheduleReadingUpdate();
+  }
+  function filterThemes() {
+    const mount = document.getElementById('collections-view');
+    const category = mount.querySelector('[data-theme-filter][aria-pressed="true"]')?.dataset.themeFilter || '全部';
+    const query = mount.querySelector('#collection-search')?.value.trim().toLowerCase() || '';
+    let count = 0;
+    mount.querySelectorAll('[data-theme-category]').forEach(card => {
+      card.hidden = !(category === '全部' || card.dataset.themeCategory === category) || !card.dataset.themeSearch.includes(query);
+      if (!card.hidden) count++;
+    });
+    mount.querySelector('#collection-result-count').textContent = `${count} 个主题${query || category !== '全部' ? '符合筛选' : '，慢慢收集'}`;
+    mount.querySelector('#collection-search-empty').hidden = count > 0;
+  }
+  app.addEventListener('input', event => { if (event.target.id === 'collection-search') filterThemes(); });
+  app.addEventListener('click', event => {
+    const filter = event.target.closest('[data-theme-filter]');
+    if (filter || event.target.closest('[data-reset-themes]')) {
+      const selected = filter?.dataset.themeFilter || '全部';
+      document.querySelectorAll('[data-theme-filter]').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.themeFilter===selected)));
+      if (!filter) document.getElementById('collection-search').value='';
+      filterThemes();
+    }
+    const tab = event.target.closest('[data-coffee-tab]');
+    if (tab) {
+      document.querySelectorAll('[data-coffee-tab]').forEach(b=>{b.setAttribute('aria-selected',String(b===tab));b.tabIndex=b===tab?0:-1;});
+      document.getElementById('cafe-panel').hidden = tab.dataset.coffeeTab !== 'cafe';
+      document.getElementById('beans-panel').hidden = tab.dataset.coffeeTab !== 'beans';
+      const theme = themes.find(t=>t.kind==='coffee');
+      lightboxOrder = theme.items.filter(i=>i.type===tab.dataset.coffeeTab).map(i=>i.photoId);
+    }
+  });
+  app.addEventListener('keydown', event => {
+    const tab = event.target.closest('[data-coffee-tab]');
+    if (!tab || !['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+    event.preventDefault();
+    const tabs = [...document.querySelectorAll('[data-coffee-tab]')];
+    const next = event.key==='Home'?tabs[0]:event.key==='End'?tabs.at(-1):tabs.find(t=>t!==tab);
+    next.click();next.focus();
+  });
 
-  const directory = readingYears.map(year => `<div class="directory-year"><span>${year}</span><div>${readingChapters.filter(chapter => chapter.year === year).map(chapter => `<a href="#${chapter.id}" data-directory-chapter="${chapter.id}"><span>${chapter.number}</span><strong>${escapeHtml(chapter.name)}</strong><small>${escapeHtml(chapter.country)}</small></a>`).join('')}</div></div>`).join('');
+  const chaptersByYear = readingYears.map(year => renderYearDivider(year) + readingChapters.filter(chapter => chapter.year === year).map(chapter => renderChapter(chapter, readingChapters.indexOf(chapter))).join('')).join('');
+  app.innerHTML = `<div id="journal-view">${renderCover() + renderOpeningNote() + renderMap()
+    + chaptersByYear + renderEnding() + renderFlights() + renderFooter()}</div><div id="collections-view" hidden></div>`;
+
+  const directory = readingYears.map(year => `<details class="directory-year"><summary>${year}<span>${readingChapters.filter(c => c.year === year).length} 段旅程 <i aria-hidden="true">＋</i></span></summary><div><a class="directory-year-link" href="#year-${year}">浏览 ${year} 年全部旅程 →</a>${readingChapters.filter(chapter => chapter.year === year).map(chapter => `<a href="#${chapter.id}" data-directory-chapter="${chapter.id}"><span>${chapter.number}</span><strong>${escapeHtml(chapter.name)}</strong><small>${escapeHtml(chapter.country)}</small></a>`).join('')}</div></details>`).join('');
   document.getElementById('journey-menu-panel').innerHTML = directory;
   document.getElementById('mobile-journey-menu').innerHTML = directory;
-
-  document.querySelector('.desktop-nav > a[data-nav="index"]').insertAdjacentHTML('beforebegin',
-    readingYears.slice(0, 3).map(year => `<a href="#year-${year}" data-nav="year-${year}">${year}</a>`).join(''));
-  document.querySelector('.mobile-nav nav > a[href="#index"]').insertAdjacentHTML('beforebegin',
-    readingYears.map(year => `<a href="#year-${year}">${year} 年旅程</a>`).join(''));
 
   const flightSearch = document.getElementById('flight-search');
   flightSearch.addEventListener('input', () => {
@@ -641,8 +732,9 @@
     const photo = photoOf(lightboxOrder[currentLightboxIndex]);
     const chapter = chapterById.get(photo.chapter);
     lightboxImage.src = photo.full;
-    lightboxImage.alt = photo.caption;
-    lightboxCaption.innerHTML = `<span>${escapeHtml(photo.caption)} · ${escapeHtml(chapter.country)}</span><span>${dateLabel(photo.date)}</span>`;
+    const collectionItem = collectionViewActive ? themes.flatMap(theme => theme.items).find(item => item.photoId === photo.id) : null;
+    lightboxImage.alt = collectionItem?.title || photo.caption;
+    lightboxCaption.innerHTML = `<span>${escapeHtml(collectionItem?.title || photo.caption)} · ${escapeHtml(collectionItem?.city || chapter.country)}</span><span>${dateLabel(photo.date)}</span>`;
     lightboxCount.textContent = `${String(currentLightboxIndex + 1).padStart(2, '0')} / ${lightboxOrder.length}`;
   }
 
@@ -673,24 +765,29 @@
   document.addEventListener('click', event => {
     const menu = document.querySelector('.journey-menu');
     if (menu.open && !menu.contains(event.target)) menu.open = false;
+    const mobile = document.querySelector('.mobile-nav');
+    if (mobile.open && !mobile.contains(event.target)) mobile.open = false;
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !dialog.open) {
+      document.querySelector('.journey-menu').open = false;
+      document.querySelector('.mobile-nav').open = false;
+    }
   });
 
   document.addEventListener('click', event => {
     const link = event.target.closest('a[href^="#"]');
     if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     const hash = link.getAttribute('href');
-    const target = document.getElementById(hash.slice(1));
-    if (!target) return;
+    if (!isCollectionHash(hash) && !document.getElementById(hash.slice(1))) return;
     event.preventDefault();
     history.pushState(null, '', hash);
-    const distance = Math.abs(target.getBoundingClientRect().top);
-    target.scrollIntoView({ behavior: distance > window.innerHeight * 2 ? 'instant' : 'smooth', block: 'start' });
-    scheduleReadingUpdate();
+    navigateView(hash, true);
   });
 
   const header = document.getElementById('site-header');
   const coverObserver = new IntersectionObserver(entries => {
-    header.classList.toggle('is-scrolled', !entries[0].isIntersecting);
+    header.classList.toggle('is-scrolled', collectionViewActive || !entries[0].isIntersecting);
   }, { threshold: 0.08 });
   coverObserver.observe(document.getElementById('cover'));
 
@@ -702,13 +799,17 @@
   let readingUpdatePending = false;
   function updateReadingLocation() {
     readingUpdatePending = false;
+    if (collectionViewActive) {
+      navLinks.forEach(link => link.classList.toggle('is-active', link.dataset.nav === 'collections'));
+      return;
+    }
     const readingLine = window.innerHeight * .35;
     let activeId = '';
     for (const section of readingSections) {
       if (section.getBoundingClientRect().top <= readingLine) activeId = section.id;
     }
     const chapter = chapterById.get(activeId);
-    const navId = chapter ? `year-${chapter.year}` : activeId;
+    const navId = chapter || activeId.startsWith('year-') ? 'journeys' : activeId;
     navLinks.forEach(link => link.classList.toggle('is-active', link.dataset.nav === navId));
     mapCountryLinks.forEach(link => link.classList.toggle('is-active', link.dataset.mapCountry === activeId));
     document.querySelectorAll('[data-directory-chapter]').forEach(link => link.classList.toggle('is-active', link.dataset.directoryChapter === activeId));
@@ -730,11 +831,7 @@
   window.addEventListener('scroll', scheduleReadingUpdate, { passive: true });
   window.addEventListener('resize', scheduleReadingUpdate);
   scheduleReadingUpdate();
-  if (location.hash) {
-    const initialTarget = document.getElementById(decodeURIComponent(location.hash.slice(1)));
-    if (initialTarget) requestAnimationFrame(() => {
-      initialTarget.scrollIntoView({ behavior: 'instant', block: 'start' });
-      scheduleReadingUpdate();
-    });
-  }
+  window.addEventListener('popstate', () => navigateView(location.hash || '#cover', false));
+  window.addEventListener('hashchange', () => navigateView(location.hash || '#cover', false));
+  navigateView(location.hash || '#cover', false);
 })();
