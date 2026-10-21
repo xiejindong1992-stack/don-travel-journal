@@ -16,7 +16,7 @@
     || chapterStart(second).localeCompare(chapterStart(first))
     || Number(second.number) - Number(first.number));
   const readingYears = [...new Set(readingChapters.map(chapter => chapter.year))];
-  const photos = new Map(trip.photos.map(photo => [photo.id, photo]));
+  const photos = new Map([...trip.photos, ...(window.COLLECTIONS_DATA?.photos || [])].map(photo => [photo.id, photo]));
   const chapterById = new Map(readingChapters.map(chapter => [chapter.id, chapter]));
   const journalLightboxOrder = readingChapters.flatMap(chapter => chapter.photoIds);
   let lightboxOrder = journalLightboxOrder;
@@ -527,40 +527,43 @@
     return `<a class="flight-window-entry" href="#collection/wings">${collectionImage(theme.coverPhotoId, '', '云海和暮色中的机翼')}<div><span>Window seat / 飞行影像</span><h3>舷窗之外</h3><p>每次靠窗，都有不一样的远方。</p><span class="window-entry-link">翻开靠窗相册 ↗</span></div></a>`;
   }
   function renderCollectionDirectory() {
-    const ordered = [...themes].sort((a, b) => (a.order ?? 100) - (b.order ?? 100) || b.updated.localeCompare(a.updated));
-    return `<section class="collections-page collections-home" aria-labelledby="collections-title">
-      <header class="collections-heading"><h1 id="collections-title" tabindex="-1">沿途拾集</h1><p>旅行之外，还有一些想慢慢收藏的小事。</p></header>
-      <div class="collection-tools"><label class="collection-search">查找主题<input id="collection-search" type="search" placeholder="机翼、井盖、咖啡…" autocomplete="off"></label></div>
-      <p class="collection-result-count" id="collection-result-count" role="status" hidden></p>
-      <div class="collection-directory">${ordered.map(theme => `<article class="theme-card theme-cover theme-cover-${theme.id}${theme.kind === 'wings' || theme.kind === 'coffee' ? ' theme-cover-wide' : ''}" data-theme-category="${escapeHtml(theme.category)}" data-theme-search="${escapeHtml([theme.title,theme.subtitle,theme.category,theme.description,theme.id==='wings'?'机翼 云海 飞机':'',...theme.items.map(i => i.city)].join(' ').toLowerCase())}"><a href="#collection/${theme.id}" aria-label="打开${escapeHtml(theme.title)}"><div class="theme-image">${collectionImage(theme.coverPhotoId)}</div><div class="theme-copy"><p class="theme-subtitle">${escapeHtml(theme.english)}</p><h2>${escapeHtml(theme.title)}</h2><p>${escapeHtml(theme.coverLine || theme.description)}</p><span class="theme-open" aria-hidden="true">↗</span></div></a></article>`).join('')}</div>
-      <div class="collection-empty" id="collection-search-empty" hidden><h2>这一页还没有收进来</h2><p>换个词，或回到全部主题看看。</p><button type="button" data-reset-themes>查看全部主题</button></div>
-      <p class="collection-afterword">今天收藏一枚井盖，明天记下一杯咖啡。这个书架，留给以后路上的发现。</p>
-    </section>${renderFooter()}`;
+    const ordered = [...themes].sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
+    return `<section class="collections-page scrapbook-scope scrapbook-home" aria-labelledby="collections-title">
+      <div class="landing-head"><div><p class="eyebrow">Small things, kept along the way.</p><h1 id="collections-title" tabindex="-1">沿途拾集</h1><p class="sub">除了风景，还有一些小事想收好。<br>把路上遇见的，慢慢贴进这本手帐。</p></div><aside class="memo"><p>有的记在脚下，<br>有的留在窗外。<br>也有一袋香气，<br>跟着我回了家。</p><span>— DON</span></aside></div>
+      <div class="collection-tools"><label class="collection-search">查找主题<input id="collection-search" type="search" placeholder="井盖、咖啡、广告…" autocomplete="off"></label></div><p class="collection-result-count" id="collection-result-count" role="status" hidden></p>
+      <div class="collection-directory directory">${ordered.map(theme => `<article class="theme-card" data-theme-category="${escapeHtml(theme.category)}" data-theme-search="${escapeHtml([theme.title,theme.subtitle,theme.category,theme.description,theme.id==='wings'?'机翼 云海 飞机':'',...theme.items.map(i=>i.city)].join(' ').toLowerCase())}"><a class="theme-book ${escapeHtml(theme.tone || 'sage')}" href="#collection/${theme.id}" aria-label="打开${escapeHtml(theme.title)}"><div class="folder"><span class="paper-leaf" aria-hidden="true"></span><span class="book-tab">${escapeHtml(theme.subtitle)}</span>${(theme.coverPhotoIds || [theme.coverPhotoId]).map((id,i)=>`<span class="mini ${['a','b','c'][i]}">${collectionImage(id)}</span>`).join('')}<span class="folder-word">${escapeHtml(theme.english)}</span></div><div class="title-row"><h2>${escapeHtml(theme.title)}</h2></div><p class="book-note">${escapeHtml(theme.coverLine || theme.description)}</p></a></article>`).join('')}</div>
+      <div class="collection-empty" id="collection-search-empty" hidden><h2>这一页还没有收进来</h2><p>换个词，或回到全部主题看看。</p><button type="button" data-reset-themes>查看全部主题</button></div><p class="landing-footer">Keep a little of each place.</p></section>${renderFooter()}`;
   }
-  function renderWindowGallery(theme) {
-    const items = [...theme.items].sort((a,b) => photoOf(b.photoId).date.localeCompare(photoOf(a.photoId).date));
-    const itemsById = new Map(items.map(item=>[item.photoId,item]));
-    const rows = photoRows(items.map(item=>item.photoId));
-    return `<section class="collections-page window-album" aria-labelledby="collection-title"><nav class="collection-return" aria-label="相册返回导航"><a class="collection-back" href="#collections">← 沿途拾集</a><a class="collection-back" href="#flights">返回飞行档案 ↗</a></nav><header class="collections-heading"><p class="collections-en">${escapeHtml(theme.english)}</p><h1 id="collection-title" tabindex="-1">${escapeHtml(theme.title)}</h1><p>${escapeHtml(theme.description)}</p></header><div class="window-photo-rows">${rows.map(row=>`<div class="window-photo-row">${row.map(id=>{
-      const item = itemsById.get(id);
-      const photo = photoOf(id);
-      const flight = flightArchive.flights.find(f=>f.date===item.flightDate && f.flightNo===item.flightNo);
-      const chapter = chapterById.get(photo.chapter);
-      const scene = chapter.scenes.find(s=>s.photoIds.includes(id));
-      return `<figure class="window-photo" style="--window-ratio:${photo.width/photo.height}"><button class="collected-photo" type="button" data-photo-id="${id}" aria-label="查看高清照片：${escapeHtml(item.title)}">${collectionImage(id, '', item.title)}</button><figcaption><div class="window-photo-meta"><span>${photo.date.replaceAll('-','.')}</span>${flight ? `<a href="#flight-${flight.date}-${flight.flightNo}">${escapeHtml(item.departure)} → ${escapeHtml(item.arrival)} · ${escapeHtml(flight.flightNo)} ↗</a>` : ''}</div><p>${escapeHtml(item.title)}</p><a class="window-photo-source" href="#${scene?.id || chapter.id}">回到${escapeHtml(chapter.name)}的旅程 ↗</a></figcaption></figure>`;
-    }).join('')}</div>`).join('')}</div><nav class="collection-return window-album-end" aria-label="相册底部导航"><a class="collection-back" href="#collections">← 继续翻阅拾集</a><a class="collection-back" href="#flights">返回飞行档案 ↗</a></nav></section>${renderFooter()}`;
-  }
-  function renderCollectionItem(item) {
+  function renderCollectionItem(item, theme, index) {
     const photo = photoOf(item.photoId);
-    const chapter = chapterById.get(photo.chapter);
-    const scene = chapter.scenes.find(s => s.photoIds.includes(item.photoId));
-    return `<article class="collected-item" data-item-type="${item.type}"><figure><button type="button" class="collected-photo" data-photo-id="${photo.id}" aria-label="查看高清照片：${escapeHtml(item.title)}">${collectionImage(photo.id, '', item.title)}</button><figcaption>${escapeHtml(item.city)}<span>${escapeHtml(photo.date.replaceAll('-', '.'))}</span></figcaption></figure><div class="collected-copy"><h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.note)}</p><a class="collection-source" href="#${scene?.id || chapter.id}">回到${escapeHtml(chapter.name)}的旅程 <span aria-hidden="true">↗</span></a></div></article>`;
+    const chapter = chapterById.get(photo.chapter || photo.relatedChapter);
+    const scene = chapter?.scenes.find(s=>s.photoIds.includes(item.photoId));
+    const shape = photo.width/photo.height < .88 ? 'portrait' : photo.width/photo.height < 1.16 ? 'square' : 'landscape';
+    const tilt = ['tilt-a','tilt-b','tilt-c'][index%3];
+    const picture = `<button class="photo" type="button" data-photo-id="${photo.id}" aria-label="查看高清照片：${escapeHtml(item.title)}">${collectionImage(photo.id, '', item.title)}</button>`;
+    const date = photo.date ? photo.date.replaceAll('-','.') : '';
+    const source = chapter ? `<a class="scrap-source" href="#${scene?.id || chapter.id}">翻阅${escapeHtml(chapter.name)}的旅程 ↗</a>` : '';
+    const foot = `<div class="foot"><span>${escapeHtml(item.city)}</span><span>${date}</span></div>${source}`;
+    if (theme.kind === 'wings') {
+      const flight = flightArchive.flights.find(f=>f.date===item.flightDate && f.flightNo===item.flightNo);
+      const departure = flight?.departure || item.departure;
+      const arrival = flight?.arrival || item.arrival;
+      const route = departure && arrival ? `${escapeHtml(departure)}<span aria-hidden="true">→</span>${escapeHtml(arrival)}` : 'Window seat';
+      const link = flight ? `<a href="#flight-${flight.date}-${flight.flightNo}">${escapeHtml(flight.flightNo)} ↗</a>` : '';
+      return `<article class="scrap ticket ${shape} ${tilt}" data-item-type="${escapeHtml(item.type)}"><div class="route" aria-label="${escapeHtml(item.city)}">${route}</div>${picture}<div class="ticket-copy"><h2>${escapeHtml(item.title)}</h2>${source}</div><div class="stub"><span>${escapeHtml(item.city)}<br>${date}</span><span>${link}</span></div></article>`;
+    }
+    if (theme.id === 'manholes') return `<article class="scrap stamp ${shape} ${tilt}"><div class="date"><span>UNDER OUR FEET</span><span>${date}</span></div>${picture}<h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.note)}</p>${source}</article>`;
+    if (theme.kind === 'coffee') return `<article class="scrap bean tape ${shape} ${tilt}" data-item-type="${escapeHtml(item.type)}">${picture}<h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.note)}</p><div class="label-line"></div><div class="origin">${escapeHtml(item.city)}${date ? ' · '+date : ''}</div>${source}</article>`;
+    if (theme.kind === 'ads') return `<article class="scrap ad tape ${shape} ${tilt}">${picture}<h2>${escapeHtml(item.title)}</h2>${item.quote ? `<blockquote>${escapeHtml(item.quote)}</blockquote>` : ''}<p>${escapeHtml(item.note)}</p>${foot}</article>`;
+    return `<article class="scrap postcard tape ${shape} ${tilt}">${picture}<h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.note)}</p>${foot}</article>`;
   }
   function renderCollectionDetail(theme) {
-    if (theme.kind === 'wings') return renderWindowGallery(theme);
-    return `<section class="collections-page collection-detail collection-detail-${theme.kind}" aria-labelledby="collection-title"><a class="collection-back" href="#collections">← 全部拾集</a><header class="collections-heading"><p class="collections-en">${escapeHtml(theme.english)}</p><h1 id="collection-title" tabindex="-1">${escapeHtml(theme.title)}</h1><p>${escapeHtml(theme.description)}</p><span class="collection-detail-subtitle">${theme.subtitle}</span></header>
-    ${theme.kind === 'coffee' ? `<div class="coffee-tabs" role="tablist" aria-label="咖啡记录类型"><button id="cafe-tab" role="tab" aria-selected="true" aria-controls="cafe-panel" tabindex="0" data-coffee-tab="cafe">坐下来的一杯 <span>${theme.items.filter(i=>i.type==='cafe').length}</span></button><button id="beans-tab" role="tab" aria-selected="false" aria-controls="beans-panel" tabindex="-1" data-coffee-tab="beans">带回家的一袋 <span>${theme.items.filter(i=>i.type==='beans').length}</span></button></div><div id="cafe-panel" role="tabpanel" aria-labelledby="cafe-tab" class="collected-items">${theme.items.filter(i=>i.type==='cafe').map((item,i)=>renderCollectionItem(item)).join('')}</div><div id="beans-panel" role="tabpanel" aria-labelledby="beans-tab" hidden>${theme.items.some(i=>i.type==='beans') ? theme.items.filter(i=>i.type==='beans').map((item,i)=>renderCollectionItem(item)).join('') : `<div class="beans-empty"><span class="beans-word">留一袋香气，给回家的日常。</span><p>咖啡豆的记录还没收进来。<br>下一袋，会记下在哪里买、来自哪里，以及喝起来的味道。</p></div>`}</div>` : `<div class="collected-items">${theme.items.map((item,i)=>renderCollectionItem(item)).join('')}</div>`}
-    <aside class="collection-related"><h2>继续翻翻</h2>${themes.filter(t=>t.id!==theme.id).map(t=>`<a href="#collection/${t.id}">${t.title}<span aria-hidden="true">→</span></a>`).join('')}</aside></section>${renderFooter()}`;
+    const cards = (items, offset=0) => items.map((item,i)=>`<div class="scrap-slot">${renderCollectionItem(item,theme,i+offset)}</div>`).join('');
+    const cafes = theme.items.filter(item=>item.type==='cafe');
+    const beans = theme.items.filter(item=>item.type==='beans');
+    return `<section class="collections-page scrapbook-scope scrapbook-detail" aria-labelledby="collection-title"><div class="page-top"><div><a class="back" href="#collections">← 翻回拾集目录</a><h1 id="collection-title" tabindex="-1">${escapeHtml(theme.title)}</h1><p>${escapeHtml(theme.coverLine || theme.description)}</p></div><span class="page-counter">${escapeHtml(theme.english)}</span></div><div class="notebook ${escapeHtml(theme.tone || 'sage')}"><p class="page-note">${escapeHtml(theme.noteLine || theme.description)}</p>
+    ${theme.kind === 'coffee' ? `<div class="coffee-tabs tabs" role="tablist" aria-label="咖啡记录类型"><button id="cafe-tab" role="tab" aria-selected="true" aria-controls="cafe-panel" tabindex="0" data-coffee-tab="cafe">坐下来的一杯 <span>${cafes.length}</span></button><button id="beans-tab" role="tab" aria-selected="false" aria-controls="beans-panel" tabindex="-1" data-coffee-tab="beans">带回家的一袋 <span>${beans.length}</span></button></div><div id="cafe-panel" role="tabpanel" aria-labelledby="cafe-tab" class="items">${cards(cafes)}</div><div id="beans-panel" role="tabpanel" aria-labelledby="beans-tab" class="items" hidden>${cards(beans,cafes.length)}</div>` : `<div class="items">${cards(theme.items)}</div>`}
+    <p class="empty-space-note">To be continued, along the way.</p></div><nav class="scrap-related" aria-label="继续翻阅拾集">${theme.kind==='wings'?'<a href="#flights">← 返回飞行档案</a>':''}${themes.filter(t=>t.id!==theme.id).map(t=>`<a href="#collection/${t.id}">${escapeHtml(t.title)} ↗</a>`).join('')}</nav></section>${renderFooter()}`;
   }
   function isCollectionHash(hash) { return hash === '#collections' || hash.startsWith('#collection/'); }
   function navigateView(hash, userClick) {
@@ -574,7 +577,7 @@
     if (collectionViewActive) {
       const theme = themes.find(t => '#collection/' + t.id === hash);
       mount.innerHTML = theme ? renderCollectionDetail(theme) : renderCollectionDirectory();
-      lightboxOrder = theme ? theme.items.map(i=>i.photoId) : journalLightboxOrder;
+      lightboxOrder = theme ? theme.items.filter(i=>theme.kind!=='coffee' || i.type==='cafe').map(i=>i.photoId) : journalLightboxOrder;
       document.title = `${theme?.title || '沿途拾集'} | DON · 沿途`;
       window.scrollTo({top: 0, behavior: 'instant'});
       if (userClick) mount.querySelector('h1').focus({preventScroll: true});
@@ -756,7 +759,7 @@
     lightboxImage.src = photo.full;
     const collectionItem = collectionViewActive ? themes.flatMap(theme => theme.items).find(item => item.photoId === photo.id) : null;
     lightboxImage.alt = collectionItem?.title || photo.caption;
-    lightboxCaption.innerHTML = `<span>${escapeHtml(collectionItem?.title || photo.caption)} · ${escapeHtml(collectionItem?.city || chapter.country)}</span><span>${dateLabel(photo.date)}</span>`;
+    lightboxCaption.innerHTML = `<span>${escapeHtml(collectionItem?.title || photo.caption)} · ${escapeHtml(collectionItem?.city || chapter?.country || '')}</span>${photo.date ? `<span>${dateLabel(photo.date)}</span>` : ''}`;
     lightboxCount.textContent = `${String(currentLightboxIndex + 1).padStart(2, '0')} / ${lightboxOrder.length}`;
   }
 
