@@ -9,3 +9,9 @@
 !/collections-data.js
 !/fonts/
 !/fonts/*
+!/assets/
+!/assets/**/
+!/assets/**/*.png
+!/assets/**/*.webp
+!/assets/**/*.svg
+!/assets/**/*.txt

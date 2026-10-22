@@ -807,3 +807,115 @@ body.viewing-collections { --paper:#f7f3e9; --paper-deep:#e9e1d2; --ink:#303b33;
  .scrapbook-scope .notebook-tail .marginal-sketch { width:51px; }
  .scrapbook-scope .notebook-tail>span { font-size:24px; }
 }
+
+/* Local scrapbook study: clear serif captions, tactile keepsakes, content-led groups. */
+.scrapbook-scope { --journal-serif:"Songti SC","STSong","SimSun",serif; }
+.scrapbook-scope .memo p,.scrapbook-scope .book-note,.scrapbook-scope .page-note,.scrapbook-scope .page-top p,.scrapbook-scope .scrap-copy { font-family:var(--journal-serif); }
+.scrapbook-scope .memo p { font-size:19px; line-height:1.95; }
+.scrapbook-scope .book-note { font-size:17px; line-height:1.8; letter-spacing:.025em; }
+.scrapbook-scope .theme-caption { display:flex; align-items:baseline; justify-content:space-between; gap:14px; padding:0 16px; margin:0 0 2px; }
+.scrapbook-scope .theme-caption .book-tab { position:static; display:block; font:normal 35px/1.2 Georgia,"Songti SC",serif; letter-spacing:-.035em; transform:none; padding:0 0 7px; color:var(--ink); white-space:normal; }
+.scrapbook-scope .collection-number { font:11px/1.5 Georgia,serif; color:#77745f; white-space:nowrap; letter-spacing:.04em; }
+.scrapbook-scope .folder:after { content:none; }
+.scrapbook-scope .folder { margin-bottom:20px; }
+.scrapbook-scope .theme-book h2 { font-family:var(--journal-serif); }
+.scrapbook-scope .folder-sketch.sketch-last { width:44px; right:94px; bottom:19px; opacity:.48; }
+.scrapbook-scope .collection-badge { position:absolute; right:17px; bottom:21px; z-index:3; width:67px; height:67px; background:#eee0b0; color:#4b5842; border:2px solid #faf5e4; outline:1px dashed #9e9c77; border-radius:50%; display:grid; grid-template-columns:19px 1fr; grid-template-rows:30px 15px; align-content:center; justify-content:center; padding:7px; gap:0 3px; transform:rotate(11deg); box-shadow:2px 3px 2px #554c3024; }
+.scrapbook-scope .collection-badge img { width:20px; height:20px; grid-row:1; align-self:center; opacity:.8; }
+.scrapbook-scope .collection-badge b { font:26px/1 Georgia,serif; align-self:center; }
+.scrapbook-scope .collection-badge small { grid-column:1/-1; font:10px/1.4 var(--journal-serif); text-align:center; letter-spacing:.08em; }
+.scrapbook-scope .badge-wings { background:#abc5cb; color:#344b50; }
+.scrapbook-scope .badge-familiar { border-radius:2px; outline-style:solid; height:60px; background:#d5a97e; transform:rotate(-9deg); }
+.scrapbook-scope .badge-coffee { border-radius:2px 14px 2px 2px; background:#cdb794; color:#4e3d2b; transform:rotate(-5deg); }
+.scrapbook-scope .badge-ads { background:#dfb7a6; color:#704d42; border-radius:2px; clip-path:polygon(0 0,88% 0,100% 14%,100% 100%,0 100%); transform:rotate(8deg); }
+.scrapbook-scope .badge-beer { background:#dfbd62; color:#65522e; border-radius:35% 45% 38% 42%; }
+.scrapbook-scope .paperclip { position:absolute; top:17px; right:32px; width:15px; height:35px; border:2px solid #7c81744d; border-radius:10px; transform:rotate(18deg); z-index:4; pointer-events:none; }
+.scrapbook-scope .paperclip:after { content:""; position:absolute; inset:3px 3px -4px 3px; border:1px solid #7c81747d; border-radius:7px; }
+.scrapbook-scope .memo { margin-right:36px; }
+.scrapbook-scope .memo .memo-sign { padding-right:45px; }
+.scrapbook-scope .page-counter { font:normal 29px/1.25 Georgia,serif; color:#5a6452; padding-bottom:5px; }
+.scrapbook-scope .notebook-margin-head { gap:18px; margin-bottom:20px; min-height:100px; }
+.scrapbook-scope .page-note { font-size:19px; line-height:1.8; }
+.scrapbook-scope .collection-guide { font:12px/1.9 var(--journal-serif); color:#747568; max-width:580px; margin:9px 0 0; }
+.scrapbook-scope .collection-group + .collection-group { padding-top:25px; border-top:1px dashed #aba68b7a; margin-top:28px; }
+.scrapbook-scope .collection-group-head { display:flex; align-items:baseline; gap:12px; margin-bottom:21px; }
+.scrapbook-scope .collection-group-head h2 { font:23px/1.4 var(--journal-serif); letter-spacing:.04em; margin:0; }
+.scrapbook-scope .collection-group-head>span { font:11px/1.4 var(--journal-serif); color:#858474; }
+.scrapbook-scope .items { grid-template-columns:repeat(3,minmax(0,1fr)); column-gap:25px; row-gap:26px; }
+.layout-ready .scrapbook-scope .items { grid-auto-rows:8px; row-gap:0; }
+.scrapbook-scope .scrap-slot { align-self:start; }
+.scrapbook-scope .scrap,.scrapbook-scope .scrap.portrait,.scrapbook-scope .scrap.square,.scrapbook-scope .ticket,.scrapbook-scope .ticket.portrait,.scrapbook-scope .ad { width:100%; max-width:none; padding:12px; }
+.scrapbook-scope .scrap-copy { min-width:0; }
+.scrapbook-scope .scrap-copy h3 { font:17px/1.55 var(--journal-serif); margin:10px 0 7px; letter-spacing:.01em; }
+.scrapbook-scope .scrap-copy p { font:12px/1.85 var(--journal-serif); }
+.scrapbook-scope .scrap.portrait { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.12fr); gap:0 12px; align-items:start; }
+.scrapbook-scope .scrap.portrait>.photo { grid-column:1; align-self:start; }
+.scrapbook-scope .scrap.portrait>.scrap-copy { grid-column:2; }
+.scrapbook-scope .scrap.portrait>.scrap-copy h3 { margin-top:0; font-size:16px; line-height:1.55; }
+.scrapbook-scope .scrap.portrait>.date,.scrapbook-scope .scrap.portrait>.route { grid-column:1/-1; }
+.scrapbook-scope .scrap .photo img { height:auto; width:100%; object-fit:contain; }
+.scrapbook-scope .ticket .photo { padding:0; }
+.scrapbook-scope .ticket .ticket-copy { padding:0; }
+.scrapbook-scope .ticket .route { font-size:20px; padding:0 0 12px; }
+.scrapbook-scope .ticket .stub { border-top:1px dashed #a5b09e; padding:9px 0 0; margin-top:12px; }
+.scrapbook-scope .ticket .stub:before,.scrapbook-scope .ticket .stub:after { content:none; }
+.scrapbook-scope .foot { flex-wrap:wrap; gap:3px 9px; }
+.scrapbook-scope .collection-group[data-count="1"] .items { grid-template-columns:minmax(0,1fr); }
+.scrapbook-scope .collection-group[data-count="1"] .scrap { max-width:590px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:0 18px; }
+.scrapbook-scope .collection-group[data-count="1"] .scrap>.photo { grid-column:1; }
+.scrapbook-scope .collection-group[data-count="1"] .scrap>.scrap-copy { grid-column:2; }
+.scrapbook-scope .collection-group[data-count="1"] .scrap>.date,.scrapbook-scope .collection-group[data-count="1"] .scrap>.route { grid-column:1/-1; }
+.scrapbook-scope .collection-group[data-count="1"] .scrap-copy h3 { margin-top:0; }
+.scrapbook-scope .collection-tabs { display:flex; gap:10px; border-bottom:1px solid #d7ccb6; padding-bottom:15px; margin-bottom:26px; }
+.scrapbook-scope .collection-tabs button { font:16px/1.6 var(--journal-serif); padding:8px 12px; border:1px solid transparent; background:transparent; color:#727569; }
+.scrapbook-scope .collection-tabs button[aria-selected="true"] { background:#e3d6b6; border-color:#c6b38a; color:#34402f; box-shadow:1px 2px 0 #c5b59135; transform:rotate(-1deg); }
+.scrapbook-scope .collection-tabs button span { display:inline-block; font:11px/1 Georgia,serif; margin-left:10px; opacity:.7; }
+@media(max-width:1100px) and (min-width:741px) {
+ .scrapbook-scope .items { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .scrapbook-scope .theme-caption .book-tab { font-size:30px; }
+}
+@media(max-width:740px) {
+ .scrapbook-scope .landing-head { padding-top:26px; }
+ .scrapbook-scope .memo { width:225px; margin-right:24px; margin-bottom:24px; }
+ .scrapbook-scope .memo p { font-size:18px; }
+ .scrapbook-scope .theme-caption { padding:0 5px; }
+ .scrapbook-scope .theme-caption .book-tab { font-size:31px; }
+ .scrapbook-scope .collection-badge { right:13px; bottom:21px; width:60px; height:60px; }
+ .scrapbook-scope .folder-sketch.sketch-last { right:82px; width:37px; }
+ .scrapbook-scope .book-note { font-size:16px; }
+ .scrapbook-scope .notebook-margin-head { align-items:flex-start; min-height:80px; }
+ .scrapbook-scope .page-note { font-size:17px; }
+ .scrapbook-scope .collection-guide { font-size:11px; }
+ .scrapbook-scope .items { grid-template-columns:minmax(0,1fr); }
+ .scrapbook-scope .collection-group-head h2 { font-size:21px; }
+ .scrapbook-scope .collection-group[data-count="1"] .scrap { max-width:none; gap:0 12px; }
+ .scrapbook-scope .collection-group[data-count="1"] .scrap-copy h3 { font-size:16px; }
+ .scrapbook-scope .collection-tabs { gap:4px; }
+ .scrapbook-scope .collection-tabs button { font-size:15px; padding:7px 8px; }
+ .scrapbook-scope .collection-tabs button span { margin-left:6px; }
+}
+@media(prefers-reduced-motion:reduce) { .scrapbook-scope .folder { transition:none; } }
+/* Translations read as small annotations beneath each discovery. */
+.scrapbook-scope .poster-translation { margin:12px 0; padding-top:10px; border-top:1px dashed #baa68a8a; }
+.scrapbook-scope .poster-translation>span { display:block; font:12px/1.5 var(--journal-serif); color:#9b6252; letter-spacing:.09em; margin-bottom:5px; }
+.scrapbook-scope .poster-translation p { margin:0; color:#51594b; }
+.scrapbook-scope[data-collection-kind="ads"] .scrap-copy p { font-size:13px; line-height:1.9; }
+@media(min-width:741px) { .scrapbook-scope[data-collection-kind="ads"] .items { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+
+/* 2026-10-23: handwritten English headings, clearer Chinese hierarchy. */
+.scrapbook-scope .theme-caption { margin-bottom:10px; }
+.scrapbook-scope .theme-caption .book-tab { font:500 46px/1.22 "DON Hand","Bradley Hand",cursive; letter-spacing:.005em; padding:0 0 6px; transform:rotate(-1.2deg); transform-origin:left center; }
+.scrapbook-scope .page-counter { font:500 36px/1.25 "DON Hand","Bradley Hand",cursive; letter-spacing:0; transform:rotate(-1deg); }
+.scrapbook-scope .memo .memo-sign { padding-right:0; }
+.scrapbook-scope .notebook-margin-head { min-height:0; }
+.scrapbook-scope .scrap-copy .collection-item-title { font:600 20px/1.5 var(--journal-serif); margin:11px 0 9px; letter-spacing:.01em; }
+.scrapbook-scope .scrap.portrait>.scrap-copy .collection-item-title,.scrapbook-scope .collection-group[data-count="1"] .scrap-copy .collection-item-title { margin-top:0; font-size:19px; line-height:1.5; }
+.scrapbook-scope .collection-item-title .item-place { display:block; font:500 11px/1.5 var(--sans); color:#986950; letter-spacing:.08em; margin-bottom:5px; }
+.scrapbook-scope .collection-item-title .item-heading { display:block; }
+.scrapbook-scope .poster-translation>span { font-size:10px; line-height:1.6; letter-spacing:.06em; margin-bottom:5px; }
+.scrapbook-scope[data-collection-kind="ads"] .poster-translation p { font-size:11.5px; line-height:1.85; color:#727566; }
+@media(max-width:1100px) and (min-width:741px) { .scrapbook-scope .theme-caption .book-tab { font-size:41px; } }
+@media(max-width:740px) {
+ .scrapbook-scope .theme-caption .book-tab { font-size:40px; }
+ .scrapbook-scope .scrap-copy .collection-item-title,.scrapbook-scope .scrap.portrait>.scrap-copy .collection-item-title,.scrapbook-scope .collection-group[data-count="1"] .scrap-copy .collection-item-title { font-size:18px; }
+}
