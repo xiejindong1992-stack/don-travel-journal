@@ -528,7 +528,7 @@
   }
   const collectionLabels = {
     wings: ['Window Seat', 'Up above'], manholes: ['Street Details', 'Look down'],
-    familiar: ['Feels Familiar', 'Hello again'], coffee: ['Coffee', 'Take home'], ads: ['City Words', 'Read this']
+    familiar: ['Feels Familiar', 'Hello again'], coffee: ['Coffee', 'Take home'], ads: ['Little Finds', 'Look here'], beer: ['Cheers', 'One more sip']
   };
   // Original marginal illustrations: decorative notebook sketches, never controls.
   function collectionDoodle(id, variant = 0) {
@@ -548,6 +548,10 @@
       coffee: [
         '<path d="M26 24c-17 2-25 26-14 37 13 12 33-1 33-18 1-12-8-20-19-19Zm-8 36c3-18 17-14 19-32M77 48c-17 2-24 26-13 37 13 12 33-1 33-18 1-12-9-20-20-19Zm-8 36c3-18 17-14 19-31M60 14l4 8m37 11-6 5"/>',
         '<path d="M21 44h57l-5 32c-1 10-41 11-44 0Zm57 4c29-7 28 28-3 22M13 88c23 8 60 8 79-1M36 33c-14-14 14-15 1-30m22 30c-13-12 13-16 1-27"/>'
+      ],
+      beer: [
+        '<path d="M28 18h18v17l8 13v44H20V48l8-13Zm0 9h18M21 57h32v23H21m8-15h16M31 12h12v6H31Z"/><path d="m72 32 2 37c1 8 24 8 25 0l2-37Zm2 5h27m-17 9 1 17m9-17-1 17m-7 14v13m-11 3h24"/>',
+        '<path d="M26 38h50v41c0 13-50 13-50 0Zm51 4c30-7 31 32 0 29M28 36c-13-10-1-25 10-17 0-15 20-16 23-2 16-5 24 9 13 19M38 49v27m14-27v27m13-27v27"/><path d="m92 13 1 9m10 5 8-2m-10-11 6-6"/>'
       ],
       ads: [
         '<path d="m14 17 70 2 4 62-20-3-9 13-13-11-26 3Z"/><path d="m29 34 39 1m-38 13 42 1m-41 13 25 1"/><path d="m90 7 12 9-9 9m8-9H84"/>',
