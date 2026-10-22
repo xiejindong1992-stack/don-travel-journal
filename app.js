@@ -502,7 +502,7 @@
       return `<details class="flight-year-group" data-flight-year="${year}" ${Number(year) >= 2025 ? 'open' : ''}><summary><span>${year}</span><small>${yearRecords.length} 条记录</small><span class="flight-year-arrow" aria-hidden="true">＋</span></summary><div class="flight-year-rows">${items}</div></details>`;
     }).join('');
     return `<section class="flight-archive" id="flights" aria-labelledby="flights-title"><div class="flight-inner">
-      <figure class="flight-feature"><img src="media/flight-hero.webp" alt="从飞机舷窗望见清晨天空下的机翼剪影" loading="lazy" decoding="async"><div class="flight-head"><span class="section-kicker">Flight archive</span><h2 id="flights-title">飞行，也是一种<br>沿途。</h2><p>每一次起飞，都把两座城市连在一起。点开一段航程，还能回到那次旅行的影像。</p></div><figcaption><span>Above the clouds</span><span>飞往大阪的清晨</span></figcaption></figure>
+      <figure class="flight-feature"><img src="https://don-travel-images.pages.dev/media/flight-hero.webp" alt="从飞机舷窗望见清晨天空下的机翼剪影" loading="lazy" decoding="async"><div class="flight-head"><span class="section-kicker">Flight archive</span><h2 id="flights-title">飞行，也是一种<br>沿途。</h2><p>每一次起飞，都把两座城市连在一起。点开一段航程，还能回到那次旅行的影像。</p></div><figcaption><span>Above the clouds</span><span>飞往大阪的清晨</span></figcaption></figure>
       <div class="flight-summary"><div><strong>${records.length}</strong><span>航班记录</span></div></div>
       ${renderWindowEntry()}
       ${renderFlightStats(records)}
