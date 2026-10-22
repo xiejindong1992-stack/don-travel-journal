@@ -562,7 +562,7 @@
     const cafes = theme.items.filter(item=>item.type==='cafe');
     const beans = theme.items.filter(item=>item.type==='beans');
     return `<section class="collections-page scrapbook-scope scrapbook-detail" aria-labelledby="collection-title"><div class="page-top"><div><a class="back" href="#collections">← 翻回拾集目录</a><h1 id="collection-title" tabindex="-1">${escapeHtml(theme.title)}</h1><p>${escapeHtml(theme.coverLine || theme.description)}</p></div><span class="page-counter">${escapeHtml(theme.english)}</span></div><div class="notebook ${escapeHtml(theme.tone || 'sage')}"><p class="page-note">${escapeHtml(theme.noteLine || theme.description)}</p>
-    ${theme.kind === 'coffee' ? `<div class="coffee-tabs tabs" role="tablist" aria-label="咖啡记录类型"><button id="cafe-tab" role="tab" aria-selected="true" aria-controls="cafe-panel" tabindex="0" data-coffee-tab="cafe">坐下来的一杯 <span>${cafes.length}</span></button><button id="beans-tab" role="tab" aria-selected="false" aria-controls="beans-panel" tabindex="-1" data-coffee-tab="beans">带回家的一袋 <span>${beans.length}</span></button></div><div id="cafe-panel" role="tabpanel" aria-labelledby="cafe-tab" class="items">${cards(cafes)}</div><div id="beans-panel" role="tabpanel" aria-labelledby="beans-tab" class="items" hidden>${cards(beans,cafes.length)}</div>` : `<div class="items">${cards(theme.items)}</div>`}
+    ${theme.kind === 'coffee' ? `<div class="coffee-tabs tabs" role="tablist" aria-label="咖啡记录类型"><button id="beans-tab" role="tab" aria-selected="true" aria-controls="beans-panel" tabindex="0" data-coffee-tab="beans">带回家的一袋 <span>${beans.length}</span></button><button id="cafe-tab" role="tab" aria-selected="false" aria-controls="cafe-panel" tabindex="-1" data-coffee-tab="cafe">坐下来的一杯 <span>${cafes.length}</span></button></div><div id="beans-panel" role="tabpanel" aria-labelledby="beans-tab" class="items">${cards(beans,cafes.length)}</div><div id="cafe-panel" role="tabpanel" aria-labelledby="cafe-tab" class="items" hidden>${cards(cafes)}</div>` : `<div class="items">${cards(theme.items)}</div>`}
     <p class="empty-space-note">To be continued, along the way.</p></div><nav class="scrap-related" aria-label="继续翻阅拾集">${theme.kind==='wings'?'<a href="#flights">← 返回飞行档案</a>':''}${themes.filter(t=>t.id!==theme.id).map(t=>`<a href="#collection/${t.id}">${escapeHtml(t.title)} ↗</a>`).join('')}</nav></section>${renderFooter()}`;
   }
   function isCollectionHash(hash) { return hash === '#collections' || hash.startsWith('#collection/'); }
@@ -577,7 +577,7 @@
     if (collectionViewActive) {
       const theme = themes.find(t => '#collection/' + t.id === hash);
       mount.innerHTML = theme ? renderCollectionDetail(theme) : renderCollectionDirectory();
-      lightboxOrder = theme ? theme.items.filter(i=>theme.kind!=='coffee' || i.type==='cafe').map(i=>i.photoId) : journalLightboxOrder;
+      lightboxOrder = theme ? theme.items.filter(i=>theme.kind!=='coffee' || i.type==='beans').map(i=>i.photoId) : journalLightboxOrder;
       document.title = `${theme?.title || '沿途拾集'} | DON · 沿途`;
       window.scrollTo({top: 0, behavior: 'instant'});
       if (userClick) mount.querySelector('h1').focus({preventScroll: true});
