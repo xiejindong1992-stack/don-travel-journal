@@ -760,3 +760,50 @@ body.viewing-collections { --paper:#f7f3e9; --paper-deep:#e9e1d2; --ink:#303b33;
 /* Keep intrinsic landscape image widths from expanding mobile grid tracks. */
 .scrapbook-scope .scrap-slot { width:100%; min-width:0; max-width:100%; display:flex; align-items:flex-start; justify-content:flex-start; }
 @media(max-width:740px) { .scrapbook-scope .items { grid-template-columns:minmax(0,1fr); } .scrapbook-scope .scrap-slot { width:100%; justify-content:center; } }
+
+/* Small handwritten notes and theme-specific marginal drawings. */
+@font-face { font-family:"DON Hand"; src:url("fonts/Caveat-Variable.ttf") format("truetype"); font-style:normal; font-weight:400 700; font-display:swap; }
+.scrapbook-scope .book-tab { font-family:"DON Hand","Bradley Hand",cursive; font-size:23px; line-height:1; letter-spacing:0; right:21px; top:10px; transform:rotate(-1.4deg); color:#4e5848; white-space:nowrap; }
+.scrapbook-scope .folder:after { width:140px; }
+.scrapbook-scope .folder-word { font-family:"DON Hand","Bradley Hand",cursive; font-size:22px; line-height:1; font-style:normal; padding:2px 9px 4px; }
+.scrapbook-scope .folder-sketch { position:absolute; z-index:1; display:block; pointer-events:none; color:#857c61; opacity:.72; }
+.scrapbook-scope .marginal-sketch { display:block; width:100%; height:auto; overflow:visible; }
+.scrapbook-scope .sketch-first { width:54px; left:44%; top:44px; transform:rotate(-9deg); }
+.scrapbook-scope .sketch-last { width:61px; right:21px; bottom:13px; transform:rotate(9deg); }
+.scrapbook-scope [data-folder-theme="wings"] .sketch-first { color:#6b8b91; top:48px; }
+.scrapbook-scope [data-folder-theme="wings"] .sketch-last { width:76px; right:15px; bottom:15px; color:#6a868c; }
+.scrapbook-scope [data-folder-theme="manholes"] .sketch-first { width:39px; top:61px; left:46%; color:#718069; }
+.scrapbook-scope [data-folder-theme="familiar"] .sketch-first { color:#a6844d; width:59px; }
+.scrapbook-scope [data-folder-theme="familiar"] .sketch-last { color:#8b784c; }
+.scrapbook-scope [data-folder-theme="coffee"] .sketch-first { width:48px; top:45px; color:#957553; }
+.scrapbook-scope [data-folder-theme="coffee"] .sketch-last { color:#957553; }
+.scrapbook-scope [data-folder-theme="ads"] .sketch-first { color:#a07873; }
+.scrapbook-scope [data-folder-theme="ads"] .sketch-last { color:#9a7770; }
+.scrapbook-scope .notebook-margin-head { display:flex; align-items:center; justify-content:space-between; gap:24px; margin-bottom:24px; min-height:68px; }
+.scrapbook-scope .notebook-margin-head .page-note { margin:0; }
+.scrapbook-scope .notebook-head-sketch { display:block; color:#8e896e; width:69px; flex:0 0 69px; transform:rotate(7deg); opacity:.8; }
+.scrapbook-scope .notebook-tail { margin:33px 4px 0 auto; display:flex; width:max-content; max-width:100%; align-items:center; gap:16px; color:#8a8067; transform:rotate(-3deg); pointer-events:none; }
+.scrapbook-scope .notebook-tail>span { font:26px/1.1 "DON Hand","Bradley Hand",cursive; }
+.scrapbook-scope .notebook-tail .marginal-sketch { width:64px; }
+.scrapbook-scope .empty-space-note { margin-top:14px; }
+@media(max-width:1100px) and (min-width:741px) {
+ .scrapbook-scope .sketch-first { width:43px; left:43%; top:40px; }
+ .scrapbook-scope .sketch-last { width:48px; right:16px; bottom:16px; }
+ .scrapbook-scope [data-folder-theme="manholes"] .sketch-first { width:32px; left:46%; }
+}
+@media(max-width:740px) {
+ .scrapbook-scope .book-tab { font-size:22px; top:10px; }
+ .scrapbook-scope .folder:after { width:134px; }
+ .scrapbook-scope .folder-word { left:16px; bottom:24px; font-size:21px; }
+ .scrapbook-scope .sketch-first { width:41px; left:45%; top:41px; }
+ .scrapbook-scope .sketch-last { width:48px; right:15px; bottom:17px; }
+ .scrapbook-scope [data-folder-theme="wings"] .sketch-last { width:58px; }
+ .scrapbook-scope [data-folder-theme="manholes"] .sketch-first { width:30px; left:46%; }
+ .scrapbook-scope [data-folder-theme="familiar"] .sketch-first { width:44px; }
+ .scrapbook-scope [data-folder-theme="coffee"] .sketch-first { width:35px; }
+ .scrapbook-scope .notebook-margin-head { min-height:53px; gap:12px; margin-bottom:25px; }
+ .scrapbook-scope .notebook-head-sketch { width:49px; flex-basis:49px; }
+ .scrapbook-scope .notebook-tail { margin-top:28px; gap:12px; }
+ .scrapbook-scope .notebook-tail .marginal-sketch { width:51px; }
+ .scrapbook-scope .notebook-tail>span { font-size:24px; }
+}

@@ -526,13 +526,48 @@
     if (!theme) return '';
     return `<a class="flight-window-entry" href="#collection/wings">${collectionImage(theme.coverPhotoId, '', '云海和暮色中的机翼')}<div><span>Window seat / 飞行影像</span><h3>舷窗之外</h3><p>每次靠窗，都有不一样的远方。</p><span class="window-entry-link">翻开靠窗相册 ↗</span></div></a>`;
   }
+  const collectionLabels = {
+    wings: ['Window Seat', 'Up above'], manholes: ['Street Details', 'Look down'],
+    familiar: ['Feels Familiar', 'Hello again'], coffee: ['Coffee', 'Take home'], ads: ['City Words', 'Read this']
+  };
+  // Original marginal illustrations: decorative notebook sketches, never controls.
+  function collectionDoodle(id, variant = 0) {
+    const sketches = {
+      wings: [
+        '<path d="M19 62C7 59 9 42 24 41C20 23 43 17 51 33C63 13 86 22 85 39C105 35 114 58 96 63Z"/><path d="M32 74c13 5 23 4 32 1M77 75l12-1"/>',
+        '<path stroke-dasharray="3 5" d="M6 82c30-1 12-32 31-34s27 31 12 30-7-24 18-32"/><path d="m64 31 45-17-24 42-7-18-14-7Zm14 7 31-24M85 56l-1-16"/>'
+      ],
+      manholes: [
+        '<path d="M35 13c-12 0-16 21-10 33 4 7 14 6 16 0 3-10 3-29-6-33Zm-8 46 12-1 3 12-13 2ZM75 39c12 1 15 21 8 33-4 7-14 5-16-2-3-10-2-29 8-31Zm-7 47 12 1-3 11-12-2Z"/>',
+        '<path d="M7 83h104M13 81V47l15-13 16 13v34m-20-1V62h12v18m16 1V30l16-12 17 12v51m-25-39h7m6 0h5m-18 12h7m6 0h5m-18 12h7m6 0h5m12 15V53l15-10 8 7v31M5 88l105 2"/>'
+      ],
+      familiar: [
+        '<path d="m13 19 87-4 5 57-32 3-20 17 2-16-36 3Z"/><path d="m29 36 54-2m-53 13 42-2m-40 14 47-2"/>',
+        '<path d="M10 45c24-27 57-30 83-7M78 35l17 4-9 13M31 75c17 5 35 3 49-3"/><path d="m24 78 15 4m29-8 11-2"/>'
+      ],
+      coffee: [
+        '<path d="M26 24c-17 2-25 26-14 37 13 12 33-1 33-18 1-12-8-20-19-19Zm-8 36c3-18 17-14 19-32M77 48c-17 2-24 26-13 37 13 12 33-1 33-18 1-12-9-20-20-19Zm-8 36c3-18 17-14 19-31M60 14l4 8m37 11-6 5"/>',
+        '<path d="M21 44h57l-5 32c-1 10-41 11-44 0Zm57 4c29-7 28 28-3 22M13 88c23 8 60 8 79-1M36 33c-14-14 14-15 1-30m22 30c-13-12 13-16 1-27"/>'
+      ],
+      ads: [
+        '<path d="m14 17 70 2 4 62-20-3-9 13-13-11-26 3Z"/><path d="m29 34 39 1m-38 13 42 1m-41 13 25 1"/><path d="m90 7 12 9-9 9m8-9H84"/>',
+        '<path d="M16 61c-16 3-13 22 1 20 16-2 13-23-1-20Zm23 4c-16 2-14 20 0 19s14-21 0-19Zm-13-3L76 13M32 64l60-33M70 13l7-3-2 8M93 28l7-1-4 6"/><path d="M65 83c14 4 27 4 39 0"/>'
+      ]
+    };
+    const shape = (sketches[id] || sketches.familiar)[variant];
+    return `<svg class="marginal-sketch" viewBox="0 0 120 105" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${shape}</svg>`;
+  }
+  function collectionMarginalia(theme, location) {
+    const words = collectionLabels[theme.id] || ['Collected', 'Keep this'];
+    if (location === 'folder') return `<span class="folder-sketch sketch-first" aria-hidden="true">${collectionDoodle(theme.id)}</span><span class="folder-sketch sketch-last" aria-hidden="true">${collectionDoodle(theme.id,1)}</span>`;
+    return `<div class="notebook-tail" aria-hidden="true"><span>${words[1]}</span>${collectionDoodle(theme.id,1)}</div>`;
+  }
   function renderCollectionDirectory() {
     const ordered = [...themes].sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
     return `<section class="collections-page scrapbook-scope scrapbook-home" aria-labelledby="collections-title">
       <div class="landing-head"><div><p class="eyebrow">Small things, kept along the way.</p><h1 id="collections-title" tabindex="-1">沿途拾集</h1><p class="sub">除了风景，还有一些小事想收好。<br>把路上遇见的，慢慢贴进这本手帐。</p></div><aside class="memo"><p>有的记在脚下，<br>有的留在窗外。<br>也有一袋香气，<br>跟着我回了家。</p><span>— DON</span></aside></div>
-      <div class="collection-tools"><label class="collection-search">查找主题<input id="collection-search" type="search" placeholder="井盖、咖啡、广告…" autocomplete="off"></label></div><p class="collection-result-count" id="collection-result-count" role="status" hidden></p>
-      <div class="collection-directory directory">${ordered.map(theme => `<article class="theme-card" data-theme-category="${escapeHtml(theme.category)}" data-theme-search="${escapeHtml([theme.title,theme.subtitle,theme.category,theme.description,theme.id==='wings'?'机翼 云海 飞机':'',...theme.items.map(i=>i.city)].join(' ').toLowerCase())}"><a class="theme-book ${escapeHtml(theme.tone || 'sage')}" href="#collection/${theme.id}" aria-label="打开${escapeHtml(theme.title)}"><div class="folder"><span class="paper-leaf" aria-hidden="true"></span><span class="book-tab">${escapeHtml(theme.subtitle)}</span>${(theme.coverPhotoIds || [theme.coverPhotoId]).map((id,i)=>`<span class="mini ${['a','b','c'][i]}">${collectionImage(id)}</span>`).join('')}<span class="folder-word">${escapeHtml(theme.english)}</span></div><div class="title-row"><h2>${escapeHtml(theme.title)}</h2></div><p class="book-note">${escapeHtml(theme.coverLine || theme.description)}</p></a></article>`).join('')}</div>
-      <div class="collection-empty" id="collection-search-empty" hidden><h2>这一页还没有收进来</h2><p>换个词，或回到全部主题看看。</p><button type="button" data-reset-themes>查看全部主题</button></div><p class="landing-footer">Keep a little of each place.</p></section>${renderFooter()}`;
+      <div class="collection-directory directory">${ordered.map(theme => `<article class="theme-card" data-theme-category="${escapeHtml(theme.category)}" data-theme-search="${escapeHtml([theme.title,theme.subtitle,theme.category,theme.description,theme.id==='wings'?'机翼 云海 飞机':'',...theme.items.map(i=>i.city)].join(' ').toLowerCase())}"><a class="theme-book ${escapeHtml(theme.tone || 'sage')}" href="#collection/${theme.id}" aria-label="打开${escapeHtml(theme.title)}"><div class="folder" data-folder-theme="${theme.id}"><span class="paper-leaf" aria-hidden="true"></span><span class="book-tab">${escapeHtml(collectionLabels[theme.id][0])}</span>${collectionMarginalia(theme,"folder")}${(theme.coverPhotoIds || [theme.coverPhotoId]).map((id,i)=>`<span class="mini ${['a','b','c'][i]}">${collectionImage(id)}</span>`).join('')}<span class="folder-word">${escapeHtml(collectionLabels[theme.id][1])}</span></div><div class="title-row"><h2>${escapeHtml(theme.title)}</h2></div><p class="book-note">${escapeHtml(theme.coverLine || theme.description)}</p></a></article>`).join('')}</div>
+      <p class="landing-footer">Keep a little of each place.</p></section>${renderFooter()}`;
   }
   function renderCollectionItem(item, theme, index) {
     const photo = photoOf(item.photoId);
@@ -561,9 +596,9 @@
     const cards = (items, offset=0) => items.map((item,i)=>`<div class="scrap-slot">${renderCollectionItem(item,theme,i+offset)}</div>`).join('');
     const cafes = theme.items.filter(item=>item.type==='cafe');
     const beans = theme.items.filter(item=>item.type==='beans');
-    return `<section class="collections-page scrapbook-scope scrapbook-detail" aria-labelledby="collection-title"><div class="page-top"><div><a class="back" href="#collections">← 翻回拾集目录</a><h1 id="collection-title" tabindex="-1">${escapeHtml(theme.title)}</h1><p>${escapeHtml(theme.coverLine || theme.description)}</p></div><span class="page-counter">${escapeHtml(theme.english)}</span></div><div class="notebook ${escapeHtml(theme.tone || 'sage')}"><p class="page-note">${escapeHtml(theme.noteLine || theme.description)}</p>
+    return `<section class="collections-page scrapbook-scope scrapbook-detail" aria-labelledby="collection-title"><div class="page-top"><div><a class="back" href="#collections">← 翻回拾集目录</a><h1 id="collection-title" tabindex="-1">${escapeHtml(theme.title)}</h1><p>${escapeHtml(theme.coverLine || theme.description)}</p></div><span class="page-counter">${escapeHtml(theme.english)}</span></div><div class="notebook ${escapeHtml(theme.tone || 'sage')}"><div class="notebook-margin-head"><p class="page-note">${escapeHtml(theme.noteLine || theme.description)}</p><span class="notebook-head-sketch" aria-hidden="true">${collectionDoodle(theme.id)}</span></div>
     ${theme.kind === 'coffee' ? `<div class="coffee-tabs tabs" role="tablist" aria-label="咖啡记录类型"><button id="beans-tab" role="tab" aria-selected="true" aria-controls="beans-panel" tabindex="0" data-coffee-tab="beans">带回家的一袋 <span>${beans.length}</span></button><button id="cafe-tab" role="tab" aria-selected="false" aria-controls="cafe-panel" tabindex="-1" data-coffee-tab="cafe">坐下来的一杯 <span>${cafes.length}</span></button></div><div id="beans-panel" role="tabpanel" aria-labelledby="beans-tab" class="items">${cards(beans,cafes.length)}</div><div id="cafe-panel" role="tabpanel" aria-labelledby="cafe-tab" class="items" hidden>${cards(cafes)}</div>` : `<div class="items">${cards(theme.items)}</div>`}
-    <p class="empty-space-note">To be continued, along the way.</p></div><nav class="scrap-related" aria-label="继续翻阅拾集">${theme.kind==='wings'?'<a href="#flights">← 返回飞行档案</a>':''}${themes.filter(t=>t.id!==theme.id).map(t=>`<a href="#collection/${t.id}">${escapeHtml(t.title)} ↗</a>`).join('')}</nav></section>${renderFooter()}`;
+    ${collectionMarginalia(theme,"footer")}<p class="empty-space-note">To be continued, along the way.</p></div><nav class="scrap-related" aria-label="继续翻阅拾集">${theme.kind==='wings'?'<a href="#flights">← 返回飞行档案</a>':''}${themes.filter(t=>t.id!==theme.id).map(t=>`<a href="#collection/${t.id}">${escapeHtml(t.title)} ↗</a>`).join('')}</nav></section>${renderFooter()}`;
   }
   function isCollectionHash(hash) { return hash === '#collections' || hash.startsWith('#collection/'); }
   function navigateView(hash, userClick) {
@@ -595,28 +630,7 @@
     document.querySelector('.journey-menu').open = false;
     scheduleReadingUpdate();
   }
-  function filterThemes() {
-    const mount = document.getElementById('collections-view');
-    const category = mount.querySelector('[data-theme-filter][aria-pressed="true"]')?.dataset.themeFilter || '全部';
-    const query = mount.querySelector('#collection-search')?.value.trim().toLowerCase() || '';
-    let count = 0;
-    mount.querySelectorAll('[data-theme-category]').forEach(card => {
-      card.hidden = !(category === '全部' || card.dataset.themeCategory === category) || !card.dataset.themeSearch.includes(query);
-      if (!card.hidden) count++;
-    });
-    mount.querySelector('#collection-result-count').textContent = `${count} 个主题符合筛选`;
-    mount.querySelector('#collection-result-count').hidden = !query && category === '全部';
-    mount.querySelector('#collection-search-empty').hidden = count > 0;
-  }
-  app.addEventListener('input', event => { if (event.target.id === 'collection-search') filterThemes(); });
   app.addEventListener('click', event => {
-    const filter = event.target.closest('[data-theme-filter]');
-    if (filter || event.target.closest('[data-reset-themes]')) {
-      const selected = filter?.dataset.themeFilter || '全部';
-      document.querySelectorAll('[data-theme-filter]').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.themeFilter===selected)));
-      if (!filter) document.getElementById('collection-search').value='';
-      filterThemes();
-    }
     const tab = event.target.closest('[data-coffee-tab]');
     if (tab) {
       document.querySelectorAll('[data-coffee-tab]').forEach(b=>{b.setAttribute('aria-selected',String(b===tab));b.tabIndex=b===tab?0:-1;});
