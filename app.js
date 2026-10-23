@@ -522,7 +522,7 @@
   function renderWindowEntry() {
     const theme = themes.find(theme => theme.id === 'wings');
     if (!theme) return '';
-    return `<a class="flight-window-entry" href="#collection/wings">${collectionImage(theme.coverPhotoId, '', '云海和暮色中的机翼')}<div><span>Window seat / 飞行影像</span><h3>舷窗之外</h3><p>每次靠窗，都有不一样的远方。</p><span class="window-entry-link">翻开靠窗相册 ↗</span></div></a>`;
+    return `<a class="flight-window-entry" href="#collection/wings">${collectionImage(theme.coverPhotoId, '', '云海和暮色中的机翼')}<div><span>Window seat / 飞行影像</span><h3>云端片刻</h3><p>每次靠窗，都有不一样的远方。</p><span class="window-entry-link">翻开靠窗相册 ↗</span></div></a>`;
   }
   const collectionLabels = {
     wings: ['Window Seat', 'Up above'], manholes: ['Street Details', 'Look down'],
