@@ -622,7 +622,7 @@
     }
     let groups=[...grouped].map(([title,items])=>({title,items}));
     if(theme.id==='ads') {
-      const order=['文字与句子','海报与图案','装置与小巧思'];
+      const order=['海报与广告','路边趣遇'];
       groups.sort((a,b)=>order.indexOf(a.title)-order.indexOf(b.title));
     } else groups.sort((a,b)=>[...b.items].sort(compareCollectionDates).map(collectionPhotoDate)[0].localeCompare([...a.items].sort(compareCollectionDates).map(collectionPhotoDate)[0]));
     for(const group of groups) {
@@ -639,6 +639,7 @@
   function collectionActiveItems(theme,tab) {
     if(theme.kind==='coffee')return theme.items.filter(i=>i.type===(tab || 'beans'));
     if(theme.kind==='wings')return theme.items.filter(i=>(i.view || 'window')===(tab || 'window'));
+    if(theme.kind==='ads' && tab && tab!=='all')return theme.items.filter(i=>i.section===(tab==='posters'?'海报与广告':'路边趣遇'));
     return theme.items;
   }
   function collectionReadingOrder(theme,tab) {
@@ -663,22 +664,22 @@
       const dep=flight?.departure || item.departure,arr=flight?.arrival || item.arrival;
       const route=item.view==='ground'?escapeHtml(item.city):dep&&arr?`${escapeHtml(dep)}<span aria-hidden="true">→</span>${escapeHtml(arr)}`:'Window view';
       const link=flight?`<a href="#flight-${flight.date}-${flight.flightNo}">${escapeHtml(flight.flightNo)} ↗</a>`:'';
-      return `<article class="scrap ticket ${shape} ${tilt}"><div class="route">${route}</div>${picture}<div class="scrap-copy ticket-copy">${collectionItemHeading(item.title)}${source}<div class="stub"><span>${date}</span><span>${link}</span></div></div></article>`;
+      return `<article class="scrap ticket ${shape} ${tilt}"><div class="route">${route}</div>${picture}<div class="scrap-copy ticket-copy">${collectionItemHeading(item.title)}${item.note?`<p>${escapeHtml(item.note)}</p>`:''}${item.translation?`<div class="poster-translation"><span>译意 · 小注</span><p>${escapeHtml(item.translation)}</p></div>`:''}${source}<div class="stub"><span>${date}</span><span>${link}</span></div></div></article>`;
     }
     if(theme.id==='manholes')return `<article class="scrap stamp ${shape} ${tilt}"><div class="date"><span>UNDER OUR FEET</span><span>${date}</span></div>${picture}<div class="scrap-copy">${collectionItemHeading(item.title)}<p>${escapeHtml(item.note)}</p>${source}</div></article>`;
     if(theme.kind==='coffee')return `<article class="scrap bean tape ${shape} ${tilt}" data-item-type="${escapeHtml(item.type)}">${picture}<div class="scrap-copy">${collectionItemHeading(item.title)}<p>${escapeHtml(item.note)}</p><div class="label-line"></div><div class="origin">${escapeHtml(item.city)}${date && item.type!=='beans'?' · '+date:''}</div>${source}</div></article>`;
     if(theme.kind==='ads')return `<article class="scrap ad tape ${shape} ${tilt}">${picture}<div class="scrap-copy">${collectionItemHeading(item.title)}${item.quote?`<blockquote>${escapeHtml(item.quote)}</blockquote>`:''}<p>${escapeHtml(item.note)}</p>${item.translation?`<div class="poster-translation"><span>译意 · 小注</span><p>${escapeHtml(item.translation)}</p></div>`:''}${foot}</div></article>`;
     return `<article class="scrap postcard tape ${shape} ${tilt}">${picture}<div class="scrap-copy">${collectionItemHeading(item.title)}<p>${escapeHtml(item.note)}</p>${foot}</div></article>`;
   }
-  function renderCollectionGroupList(theme,items) {
+  function renderCollectionGroupList(theme,items,scope='') {
     let index=0;
-    return collectionGroups(theme,items).map((group,n)=>`<section class="collection-group" data-count="${group.items.length}" aria-labelledby="${theme.id}-group-${theme.kind==='wings'?(items[0]?.view || 'window'):(items[0]?.type || 'all')}-${n}"><div class="collection-group-head"><h2 id="${theme.id}-group-${theme.kind==='wings'?(items[0]?.view || 'window'):(items[0]?.type || 'all')}-${n}">${escapeHtml(group.title)}</h2><span>${group.items.length} 则</span></div><div class="items">${group.items.map(item=>`<div class="scrap-slot">${renderCollectionItem(item,theme,index++)}</div>`).join('')}</div></section>`).join('');
+    return collectionGroups(theme,items).map((group,n)=>`<section class="collection-group" data-count="${group.items.length}" aria-labelledby="${theme.id}-group-${scope || (theme.kind==='wings'?(items[0]?.view || 'window'):(items[0]?.type || 'all'))}-${n}"><div class="collection-group-head"><h2 id="${theme.id}-group-${scope || (theme.kind==='wings'?(items[0]?.view || 'window'):(items[0]?.type || 'all'))}-${n}">${escapeHtml(group.title)}</h2><span>${group.items.length} 则</span></div><div class="items">${group.items.map(item=>`<div class="scrap-slot">${renderCollectionItem(item,theme,index++)}</div>`).join('')}</div></section>`).join('');
   }
   function renderCollectionDetail(theme) {
-    const type=theme.kind==='coffee'?'coffee':theme.kind==='wings'?'wings':null;
-    const tabs=type==='coffee'?[['beans','带回家的一袋'],['cafe','坐下来的一杯']]:[['window','舷窗风景'],['ground','机场与飞机']];
-    const guide={wings:'先看窗外的风景，也收藏地面的相遇。每类按年份排列，同一航班放在一起。',manholes:'按地区翻阅，同一座城市的脚下发现放在一起。',coffee:'先翻带回家的一袋，再看坐下来的一杯；同一地点的香气收在一处。',familiar:'跟着城市翻阅，把异乡遇见的熟悉放在一起。',ads:'文字与句子、海报与图案、装置与小巧思，各自成页。',beer:'跟着一趟趟旅行收好瓶标，也记住一起碰杯的片刻。'};
-    const body=type?`<div class="collection-tabs coffee-tabs tabs" role="tablist" data-collection-theme="${theme.id}" aria-label="${type==='coffee'?'咖啡记录类型':'飞行影像类型'}">${tabs.map(([key,label],i)=>`<button id="${key}-tab" role="tab" aria-selected="${!i}" aria-controls="${key}-panel" tabindex="${i?-1:0}" data-collection-tab="${key}">${label}<span>${collectionActiveItems(theme,key).length}</span></button>`).join('')}</div>${tabs.map(([key],i)=>`<div id="${key}-panel" role="tabpanel" aria-labelledby="${key}-tab"${i?' hidden':''}>${renderCollectionGroupList(theme,collectionActiveItems(theme,key))}</div>`).join('')}`:renderCollectionGroupList(theme,theme.items);
+    const type=['coffee','wings','ads'].includes(theme.kind)?theme.kind:null;
+    const tabs=type==='coffee'?[['beans','带回家的一袋'],['cafe','坐下来的一杯']]:type==='ads'?[['all','全部'],['posters','海报与广告'],['finds','路边趣遇']]:[['window','舷窗风景'],['ground','机场与飞机']];
+    const guide={wings:'先看窗外的风景，也收藏地面的相遇。每类按年份排列，同一航班放在一起。',manholes:'按地区翻阅，同一座城市的脚下发现放在一起。',coffee:'先翻带回家的一袋，再看坐下来的一杯；同一地点的香气收在一处。',familiar:'跟着城市翻阅，把异乡遇见的熟悉放在一起。',ads:'海报与广告、路边趣遇，点击上方分类翻阅；每类按拍摄日期排列。',beer:'跟着一趟趟旅行收好瓶标，也记住一起碰杯的片刻。'};
+    const body=type?`<div class="collection-tabs coffee-tabs tabs" role="tablist" data-collection-theme="${theme.id}" aria-label="${type==='coffee'?'咖啡记录类型':type==='ads'?'街头发现类型':'飞行影像类型'}">${tabs.map(([key,label],i)=>`<button id="${theme.id}-${key}-tab" role="tab" aria-selected="${!i}" aria-controls="${theme.id}-${key}-panel" tabindex="${i?-1:0}" data-collection-tab="${key}">${label}<span>${collectionActiveItems(theme,key).length}</span></button>`).join('')}</div>${tabs.map(([key],i)=>`<div id="${theme.id}-${key}-panel" role="tabpanel" aria-labelledby="${theme.id}-${key}-tab"${i?' hidden':''}>${renderCollectionGroupList(theme,collectionActiveItems(theme,key),key)}</div>`).join('')}`:renderCollectionGroupList(theme,theme.items);
     return `<section class="collections-page scrapbook-scope scrapbook-detail" data-collection-kind="${theme.id}" aria-labelledby="collection-title"><div class="page-top"><div><a class="back" href="#collections">← 翻回拾集目录</a><h1 id="collection-title" tabindex="-1">${escapeHtml(theme.title)}</h1><p>${escapeHtml(theme.coverLine || theme.description)}</p></div><span class="page-counter">${escapeHtml(collectionLabels[theme.id][0])}</span></div><div class="notebook ${escapeHtml(theme.tone || 'sage')}"><div class="notebook-margin-head"><div><p class="page-note">${escapeHtml(theme.noteLine || theme.description)}</p><p class="collection-guide">${guide[theme.id]}</p></div></div>${body}${collectionMarginalia(theme,'footer')}<p class="empty-space-note">To be continued, along the way.</p></div><nav class="scrap-related" aria-label="继续翻阅拾集">${theme.kind==='wings'?'<a href="#flights">← 返回飞行档案</a>':''}${themes.filter(t=>t.id!==theme.id).map(t=>`<a href="#collection/${t.id}">${escapeHtml(t.title)} ↗</a>`).join('')}</nav></section>${renderFooter()}`;
   }
   let collectionCardObserver;
@@ -745,7 +746,8 @@
     if(!tab||!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
     event.preventDefault();
     const tabs=[...tab.closest('[role="tablist"]').querySelectorAll('[role="tab"]')];
-    const next=event.key==='Home'?tabs[0]:event.key==='End'?tabs.at(-1):tabs.find(t=>t!==tab);
+    const direction=event.key==='ArrowRight'?1:-1;
+    const next=event.key==='Home'?tabs[0]:event.key==='End'?tabs.at(-1):tabs[(tabs.indexOf(tab)+direction+tabs.length)%tabs.length];
     next.click();next.focus();
   });
 
