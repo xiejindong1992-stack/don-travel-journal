@@ -4,6 +4,8 @@
 !/index.html
 !/styles.css
 !/app.js
+!/passport.js
+!/passport.css
 !/trip-data.js
 !/flight-data.js
 !/collections-data.js

@@ -1,0 +1,154 @@
+/* An additional notebook, sharing the journal's typography and muted palette. */
+.viewing-passport { background:#ede7d9; }
+.viewing-passport .reading-progress { display:none; }
+.viewing-passport .site-header { background:rgba(247,244,235,.96); color:#2e423a; border-color:#d4cdbd; }
+.passport-page { --passport-ink:#2e423a; --passport-muted:#6d7265; color:var(--passport-ink); max-width:1250px; margin:auto; padding:132px 48px 80px; }
+.passport-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:40px; margin-bottom:40px; }
+.passport-hand { font:400 30px/1.2 "DON Hand","Bradley Hand",cursive; color:#9b5b48; margin:0 0 10px; }
+.passport-heading h1 { font:400 clamp(44px,5.8vw,76px)/1.15 var(--serif); margin:0; letter-spacing:.04em; }
+.passport-heading>p { margin:0 0 6px; font:16px/1.9 var(--serif); color:var(--passport-muted); }
+.passport-controls { display:flex; align-items:center; justify-content:space-between; gap:18px; margin-bottom:25px; }
+.passport-controls nav { display:flex; gap:30px; }
+.passport-controls nav a { padding:14px 0; border-bottom:2px solid transparent; text-decoration:none; font-size:15px; }
+.passport-controls nav a[aria-current] { border-color:var(--passport-ink); font-weight:600; }
+.passport-controls label { display:flex; align-items:center; gap:12px; font-size:12px; color:var(--passport-muted); }
+.passport-controls select { padding:9px 30px 9px 12px; border:1px solid #c4c4b5; border-radius:0; background:#f8f5ec; color:var(--passport-ink); font:14px var(--sans); }
+.passport-book { display:grid; grid-template-columns:.83fr 1.17fr; border-radius:7px 13px 13px 7px; box-shadow:0 18px 35px -20px #49463466,0 3px 0 #b9b2a1,0 7px 0 -1px #d4cebc; }
+.passport-cover { padding:29px 36px 31px; background:#29453c; color:#e1cf9c; border:1px solid #203a30; border-radius:7px 0 0 7px; position:relative; box-shadow:inset 9px 0 0 #203d34,inset -5px 0 12px #142c2440; display:flex; flex-direction:column; align-items:center; text-align:center; }
+.passport-cover:before { content:""; position:absolute; inset:14px 15px 14px 21px; border:1px solid #b6a87b69; pointer-events:none; border-radius:3px; }
+.passport-cover-top { display:flex; justify-content:space-between; gap:10px; width:100%; font:11px var(--serif); letter-spacing:.1em; opacity:.85; }
+.passport-cover-script { font:400 clamp(58px,6.2vw,82px)/.92 "DON Hand","Bradley Hand",cursive; margin:42px 0 27px; transform:rotate(-5deg); }
+.passport-cover-seal { width:108px; height:108px; border:1px solid #d7c7979c; outline:1px solid #d7c7979c; outline-offset:5px; border-radius:50%; display:flex; flex-direction:column; justify-content:center; gap:11px; }
+.passport-cover-seal>span { font:28px var(--serif); letter-spacing:.12em; }
+.passport-cover-seal small { font:7px var(--sans); letter-spacing:.08em; }
+.passport-cover-bottom { font:13px/1.9 var(--serif); margin:32px 0 0; letter-spacing:.12em; }
+.passport-identity { min-width:0; padding:33px 35px 24px; border:1px solid #d6cebc; border-left:0; border-radius:0 13px 13px 0; background:linear-gradient(90deg,#d9d2bf70,transparent 5%),#faf6e9; display:flex; flex-direction:column; justify-content:space-between; }
+.passport-identity-top { display:flex; justify-content:space-between; align-items:center; font:11px var(--sans); color:var(--passport-muted); letter-spacing:.07em; }
+.passport-identity-top strong { color:var(--passport-ink); font:22px var(--serif); margin-left:8px; }
+.passport-map { margin:25px 0 20px; }
+.passport-map svg { display:block; width:100%; height:auto; }
+.passport-map path { fill:#dce1d1; stroke:#a7b6a4; stroke-width:1; vector-effect:non-scaling-stroke; }
+.passport-map circle { fill:#a75a43; stroke:#faf6e9; stroke-width:1; }
+.passport-map>span { display:block; margin-top:8px; font:10px var(--sans); color:#767869; text-align:right; }
+.passport-totals { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); border-top:1px solid #d6d1c1; border-bottom:1px solid #d6d1c1; padding:15px 0 17px; gap:15px; }
+.passport-totals>div { display:flex; flex-direction:column; gap:2px; }
+.passport-totals strong { font:400 clamp(30px,4vw,51px)/1.2 var(--serif); }
+.passport-totals span { font:12px var(--sans); color:var(--passport-muted); }
+.passport-edition { font:13px var(--serif); color:var(--passport-muted); margin:17px 0 0; }
+.passport-stamp-section { margin-top:75px; }
+.passport-stamps-heading { display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-bottom:36px; }
+.passport-stamps-heading h2 { margin:0; font:400 clamp(26px,3vw,36px)/1.4 var(--serif); }
+.passport-stamps-heading>span { font-size:12px; color:var(--passport-muted); padding-bottom:5px; white-space:nowrap; }
+.passport-stamps { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:30px 28px; padding:2px 5px 10px; }
+.passport-stamp { display:flex; flex-direction:column; justify-content:center; align-items:center; gap:9px; min-height:139px; padding:15px 10px; border:2px solid currentColor; border-radius:49% / 15%; color:var(--stamp-ink); transform:rotate(var(--stamp-turn)); text-align:center; text-decoration:none; position:relative; transition:transform .18s,background .18s; }
+.passport-stamp:before { content:""; position:absolute; inset:5px; border:1px dashed currentColor; border-radius:inherit; opacity:.65; pointer-events:none; }
+.passport-stamp-top { font:11px/1.2 var(--sans); text-transform:uppercase; letter-spacing:.13em; }
+.passport-stamp strong { font:400 24px/1.3 var(--serif); }
+.passport-stamp-date { font:10px/1.3 var(--sans); letter-spacing:.1em; }
+a.passport-stamp:hover { transform:rotate(0) translateY(-3px); background:#fff9; }
+.passport-stamp.is-selected { background:#faf7ed; box-shadow:0 5px 0 -2px currentColor; transform:rotate(0); }
+.passport-stamp.is-empty { color:#a2a092; border-style:dashed; transform:none; }
+.province-stamps { grid-template-columns:repeat(7,minmax(0,1fr)); gap:23px; }
+.is-province { border-radius:50%; min-height:0; aspect-ratio:1; gap:4px; padding:10px 5px; }
+.is-province .passport-stamp-top { font:400 29px/1.2 var(--serif); letter-spacing:0; }
+.is-province strong { font:12px/1.4 var(--sans); }
+.is-province .passport-stamp-date { font-size:8px; letter-spacing:0; }
+.passport-pick { padding:60px 20px 30px; text-align:center; }
+.passport-pick>span { font:32px "DON Hand",cursive; color:#9b5b48; }
+.passport-pick p { font:14px var(--serif); color:var(--passport-muted); }
+.passport-detail { margin-top:65px; padding:46px 42px; background:#faf6ec; border-top:3px double #acb4a4; scroll-margin-top:95px; }
+.passport-detail-heading { display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-bottom:30px; }
+.passport-detail-heading h2 { font:400 45px/1.2 var(--serif); margin:0 0 12px; }
+.passport-detail-heading p:not(.passport-hand) { font:13px var(--sans); color:var(--passport-muted); margin:0; }
+.passport-detail-heading dl { margin:0; display:flex; gap:25px; }
+.passport-detail-heading dt { color:var(--passport-muted); font-size:10px; margin-bottom:8px; }
+.passport-detail-heading dd { margin:0; font:17px var(--serif); }
+.passport-place-layout { display:grid; grid-template-columns:1.2fr .8fr; gap:38px; align-items:start; }
+.passport-detail h3 { font:400 21px var(--serif); margin:0 0 22px; }
+.passport-city-stamps { display:flex; flex-wrap:wrap; gap:13px; }
+.passport-city-stamps a { display:flex; flex-direction:column; gap:6px; min-width:90px; border:1px solid #8c9b88; padding:11px 14px; border-radius:3px; text-align:center; text-decoration:none; }
+.passport-city-stamps strong { font:400 19px var(--serif); }
+.passport-city-stamps span { font:10px var(--sans); color:var(--passport-muted); }
+.passport-city-stamps a:hover { background:#e7ecdf; }
+.passport-places-note { margin-top:25px; font:12px/1.8 var(--sans); color:var(--passport-muted); }
+.passport-places-note p { margin:9px 0; }
+.passport-places-note b { font-weight:500; margin-right:8px; }
+.passport-photo { margin:0; padding:10px 10px 12px; background:#fffdf6; transform:rotate(2deg); box-shadow:0 3px 10px #423e321a; }
+.passport-photo img { width:100%; aspect-ratio:4/3; object-fit:cover; }
+.passport-photo figcaption { font:12px var(--serif); margin-top:10px; color:var(--passport-muted); }
+.passport-detail .passport-journey-heading { margin-top:42px; }
+.passport-journeys { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px 30px; }
+.passport-journeys>a { display:flex; gap:14px; align-items:center; text-decoration:none; padding:0 0 17px; border-bottom:1px solid #dad8cc; min-width:0; }
+.passport-journeys img { width:82px; height:82px; object-fit:cover; flex-shrink:0; }
+.passport-journeys a>span { display:flex; flex-direction:column; gap:6px; min-width:0; }
+.passport-journeys small { font:10px var(--sans); color:var(--passport-muted); }
+.passport-journeys strong { font:400 19px/1.3 var(--serif); }
+.passport-journeys em { font:11px/1.5 var(--sans); color:var(--passport-muted); font-style:normal; }
+.passport-journeys i { margin-left:auto; font-style:normal; }
+.passport-journeys a:hover strong { text-decoration:underline; text-underline-offset:4px; }
+.passport-collections { margin-top:35px; }
+.passport-collections>div { display:flex; flex-wrap:wrap; gap:13px 28px; }
+.passport-collections a { font:16px var(--serif); text-decoration:none; border-bottom:1px solid #bfc6b6; padding-bottom:8px; }
+.passport-collections a span { display:block; font:10px var(--sans); color:var(--passport-muted); margin-top:5px; }
+.passport-method { margin-top:48px; border-top:1px solid #cacbbd; padding-top:20px; max-width:780px; font:12px/1.9 var(--sans); color:var(--passport-muted); }
+.passport-method summary,.passport-places-note summary { cursor:pointer; }
+.passport-ending { margin:55px 0 0; text-align:right; font:34px "DON Hand",cursive; color:#9b5b48; }
+.passport-page a:focus-visible,.passport-page select:focus-visible,.passport-page summary:focus-visible { outline:2px solid #a34536; outline-offset:5px; }
+.passport-page [tabindex="-1"]:focus { outline:none; }
+@media(max-width:950px) {
+ .passport-page { padding:115px 28px 55px; }
+ .passport-cover { padding:26px; }
+ .passport-cover-top { font-size:10px; }
+ .passport-identity { padding:25px; }
+ .passport-stamps { gap:24px; }
+ .province-stamps { grid-template-columns:repeat(6,minmax(0,1fr)); }
+ .passport-detail { padding:30px; }
+}
+@media(max-width:680px) {
+ .passport-page { padding:105px 20px 45px; }
+ .passport-heading { display:block; margin-bottom:25px; }
+ .passport-heading>p { margin-top:20px; font-size:14px; }
+ .passport-hand { font-size:26px; }
+ .passport-controls { align-items:flex-end; }
+ .passport-controls nav { gap:22px; }
+ .passport-controls nav a { font-size:13px; }
+ .passport-controls label { flex-direction:column; align-items:flex-start; gap:4px; font-size:10px; }
+ .passport-controls select { font-size:12px; padding:8px; }
+ .passport-book { grid-template-columns:1fr; }
+ .passport-cover { border-radius:7px 7px 0 0; padding:24px 28px; display:grid; grid-template-columns:1fr 80px; gap:20px; text-align:left; }
+ .passport-cover-top { grid-column:1/-1; }
+ .passport-cover-script { margin:0; font-size:57px; transform:rotate(-3deg); }
+ .passport-cover-seal { width:67px; height:67px; gap:5px; text-align:center; }
+ .passport-cover-seal>span { font-size:20px; }
+ .passport-cover-seal small { font-size:5px; }
+ .passport-cover-bottom { display:none; }
+ .passport-identity { padding:24px; border-radius:0 0 7px 7px; border-left:1px solid #d6cebc; }
+ .passport-map { margin:18px 0; }
+ .passport-totals { padding:12px 0; }
+ .passport-totals strong { font-size:35px; }
+ .passport-totals span { font-size:11px; }
+ .passport-stamp-section { margin-top:48px; }
+ .passport-stamps-heading { gap:10px; margin-bottom:25px; }
+ .passport-stamps-heading>span { font-size:10px; }
+ .passport-stamps-heading h2 { font-size:25px; }
+ .passport-stamps-heading .passport-hand { font-size:23px; }
+ .passport-stamps { grid-template-columns:repeat(2,minmax(0,1fr)); gap:25px 22px; }
+ .passport-stamp { min-height:120px; }
+ .passport-stamp strong { font-size:22px; }
+ .passport-stamp-top { font-size:9px; }
+ .province-stamps { grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
+ .is-province { min-height:0; gap:2px; }
+ .is-province .passport-stamp-top { font-size:22px; }
+ .is-province strong { font-size:11px; }
+ .is-province .passport-stamp-date { font-size:7px; }
+ .passport-detail { margin:40px -6px 0; padding:25px 18px; }
+ .passport-detail-heading { display:block; }
+ .passport-detail-heading h2 { font-size:35px; }
+ .passport-detail-heading dl { margin-top:20px; }
+ .passport-detail-heading dd { font-size:16px; }
+ .passport-place-layout { grid-template-columns:1fr; gap:25px; }
+ .passport-photo { max-width:340px; justify-self:center; }
+ .passport-journeys { grid-template-columns:1fr; }
+ .passport-pick { padding:45px 0 10px; }
+}
+@media(prefers-reduced-motion:reduce) { .passport-stamp { transition:none; } }

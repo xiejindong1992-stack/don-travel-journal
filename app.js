@@ -22,6 +22,7 @@
   let lightboxOrder = journalLightboxOrder;
   const themes = window.COLLECTIONS_DATA?.themes || [];
   let collectionViewActive = false;
+  let passportViewActive = false;
   const sceneSteps = readingChapters.flatMap(chapter => chapter.scenes);
   const sceneStepIndex = new Map(sceneSteps.map((scene, index) => [scene.id, index]));
   let currentLightboxIndex = 0;
@@ -699,14 +700,27 @@
   }
   function isCollectionHash(hash) { return hash === '#collections' || hash.startsWith('#collection/'); }
   function navigateView(hash, userClick) {
-    const wasCollection = collectionViewActive;
+    const wasCollection = collectionViewActive || passportViewActive;
+    passportViewActive = Boolean(window.TravelPassport?.isHash(hash));
     collectionViewActive = isCollectionHash(hash);
     const journal = document.getElementById('journal-view');
     const mount = document.getElementById('collections-view');
-    journal.hidden = collectionViewActive;
+    journal.hidden = collectionViewActive || passportViewActive;
+    const passport = document.getElementById("passport-view");
+    passport.hidden = !passportViewActive;
+    document.body.classList.toggle("viewing-passport", passportViewActive);
     mount.hidden = !collectionViewActive;
     document.body.classList.toggle('viewing-collections', collectionViewActive);
-    if (collectionViewActive) {
+    if (passportViewActive) {
+      collectionCardObserver?.disconnect();
+      passport.innerHTML = window.TravelPassport.render(trip, photos, themes, hash);
+      document.title = '旅行护照 | DON · 沿途';
+      const heading = passport.querySelector('#passport-detail h2') || passport.querySelector('h1');
+      if (userClick && passport.querySelector('#passport-detail')) {
+        passport.querySelector('#passport-detail').scrollIntoView({behavior:'instant',block:'start'});
+      } else window.scrollTo({top:0,behavior:'instant'});
+      if (userClick) heading?.focus({preventScroll:true});
+    } else if (collectionViewActive) {
       const theme = themes.find(t => '#collection/' + t.id === hash);
       mount.innerHTML = theme ? renderCollectionDetail(theme) : renderCollectionDirectory();
       observeCollectionLayout(mount);
@@ -724,7 +738,7 @@
       const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
       target.scrollIntoView({behavior: !userClick || wasCollection || reduced || Math.abs(target.getBoundingClientRect().top) > innerHeight*2 ? 'instant' : 'smooth', block:'start'});
     }
-    header.classList.toggle('is-scrolled', collectionViewActive || document.getElementById('cover').getBoundingClientRect().bottom <= 72);
+    header.classList.toggle('is-scrolled', collectionViewActive || passportViewActive || document.getElementById('cover').getBoundingClientRect().bottom <= 72);
     document.querySelector('.mobile-nav').open = false;
     document.querySelector('.journey-menu').open = false;
     scheduleReadingUpdate();
@@ -753,7 +767,7 @@
 
   const chaptersByYear = readingYears.map(year => renderYearDivider(year) + readingChapters.filter(chapter => chapter.year === year).map(chapter => renderChapter(chapter, readingChapters.indexOf(chapter))).join('')).join('');
   app.innerHTML = `<div id="journal-view">${renderCover() + renderOpeningNote() + renderMap()
-    + chaptersByYear + renderEnding() + renderFlights() + renderFooter()}</div><div id="collections-view" hidden></div>`;
+    + chaptersByYear + renderEnding() + renderFlights() + renderFooter()}</div><div id="collections-view" hidden></div><div id="passport-view" hidden></div>`;
 
   const directory = readingYears.map(year => `<details class="directory-year"><summary>${year}<span>${readingChapters.filter(c => c.year === year).length} 段旅程 <i aria-hidden="true">＋</i></span></summary><div><a class="directory-year-link" href="#year-${year}">浏览 ${year} 年全部旅程 →</a>${readingChapters.filter(chapter => chapter.year === year).map(chapter => `<a href="#${chapter.id}" data-directory-chapter="${chapter.id}"><span>${chapter.number}</span><strong>${escapeHtml(chapter.name)}</strong><small>${escapeHtml(chapter.country)}</small></a>`).join('')}</div></details>`).join('');
   document.getElementById('journey-menu-panel').innerHTML = directory;
@@ -920,7 +934,7 @@
     const link = event.target.closest('a[href^="#"]');
     if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     const hash = link.getAttribute('href');
-    if (!isCollectionHash(hash) && !document.getElementById(hash.slice(1))) return;
+    if (!isCollectionHash(hash) && !window.TravelPassport?.isHash(hash) && !document.getElementById(hash.slice(1))) return;
     event.preventDefault();
     history.pushState(null, '', hash);
     navigateView(hash, true);
@@ -928,7 +942,7 @@
 
   const header = document.getElementById('site-header');
   const coverObserver = new IntersectionObserver(entries => {
-    header.classList.toggle('is-scrolled', collectionViewActive || !entries[0].isIntersecting);
+    header.classList.toggle('is-scrolled', collectionViewActive || passportViewActive || !entries[0].isIntersecting);
   }, { threshold: 0.08 });
   coverObserver.observe(document.getElementById('cover'));
 
@@ -940,6 +954,10 @@
   let readingUpdatePending = false;
   function updateReadingLocation() {
     readingUpdatePending = false;
+    if (passportViewActive) {
+      navLinks.forEach(link => link.classList.toggle('is-active', link.dataset.nav === 'passport'));
+      return;
+    }
     if (collectionViewActive) {
       navLinks.forEach(link => link.classList.toggle('is-active', link.dataset.nav === 'collections'));
       return;
@@ -972,6 +990,14 @@
   window.addEventListener('scroll', scheduleReadingUpdate, { passive: true });
   window.addEventListener('resize', scheduleReadingUpdate);
   scheduleReadingUpdate();
+  app.addEventListener('change', event => {
+    if (event.target.id !== 'passport-year') return;
+    const select = event.target;
+    const hash = window.TravelPassport.href(select.dataset.passportMode,select.dataset.passportSelection,select.value);
+    history.pushState(null, '', hash);
+    navigateView(hash, false);
+    document.getElementById('passport-year')?.focus({preventScroll:true});
+  });
   window.addEventListener('popstate', () => navigateView(location.hash || '#cover', false));
   window.addEventListener('hashchange', () => navigateView(location.hash || '#cover', false));
   navigateView(location.hash || '#cover', false);
